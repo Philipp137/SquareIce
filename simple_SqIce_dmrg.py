@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 #
-# Simple DMRG tutorial.  This code integrates the following concepts:
+# Simple DMRG for square ice
 #  - Infinite system algorithm
 #  - Finite system algorithm
 #
+# This code is based on the DMRG Tutorial of:
 # Copyright 2013 James R. Garrison and Ryan V. Mishmash.
 # Open source under the MIT license.  Source code at
 # <https://github.com/simple-dmrg/simple-dmrg/>
