@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 #
-# Simple DMRG for square ice
+# Simple DMRG tutorial.  This code integrates the following concepts:
 #  - Infinite system algorithm
 #  - Finite system algorithm
 #
-# This code is based on the DMRG Tutorial of:
 # Copyright 2013 James R. Garrison and Ryan V. Mishmash.
 # Open source under the MIT license.  Source code at
 # <https://github.com/simple-dmrg/simple-dmrg/>
@@ -27,75 +26,43 @@ EnlargedBlock = namedtuple("EnlargedBlock", ["length", "basis_size", "operator_d
 
 def is_valid_block(block):
     for op in block.operator_dict.values():
-        # here we have to differentiate between an operator list and a
-        # single operator
-        if type(op) is list:
-            for op_element in op:
-                if op_element.shape[0] != block.basis_size or op_element.shape[1] != block.basis_size:
-                    return False
-        else:
-            if op.shape[0] != block.basis_size or op.shape[1] != block.basis_size:
-                return False
+        if op.shape[0] != block.basis_size or op.shape[1] != block.basis_size:
+            return False
     return True
-
-def mkron( *kron_list):
-    A = kron_list[0]
-    for i,val in  enumerate(kron_list[1:],start=1):
-        A = np.kron(A, val)  
-    
-    return A
 
 # This function should test the same exact things, so there is no need to
 # repeat its definition.
 is_valid_enlarged_block = is_valid_block
 
-# Model-specific code for 2 x Lx chain
-model_d = 2**6  # single-site basis size
+# Model-specific code for the Heisenberg XXZ chain
+model_d = 2  # single-site basis size
 
-I2 = np.eye(2)
-
-Sp1 = np.array([[0, 1], [0, 0]], dtype='d')  # single-site S^+
-Sm1 = Sp1.conjugate().transpose()
 Sz1 = np.array([[0.5, 0], [0, -0.5]], dtype='d')  # single-site S^z
+Sp1 = np.array([[0, 1], [0, 0]], dtype='d')  # single-site S^+
 
-Plq_right = [ mkron(I2,I2,Sp1,I2,Sm1,Sp1), mkron(I2,I2,I2,Sp1,Sp1,Sm1)] #right half plaquette
-Plq_right_deg = [mkron(I2,I2,Sm1,I2,Sp1,Sm1),mkron(I2,I2,I2,Sm1,Sm1,Sp1)] #right half plaquette
+H1 = np.array([[0, 0], [0, 0]], dtype='d')  # single-site portion of H is zero
 
-Plq_left = [-mkron(Sp1,Sm1,Sp1,I2,I2,I2),-mkron(Sm1,Sp1,I2,Sp1,I2,I2)]
-Plq_left_deg = [-mkron(Sm1,Sp1,Sm1,I2,I2,I2), -mkron(Sp1,Sm1,I2,Sm1,I2,I2)]
-
-H1 = np.zeros([2**6, 2**6] , dtype='d')  # single-site portion of H is zero
-
-def H2(hleft_list, hright_list):  # two-site part of H
+def H2(Sz1, Sp1, Sz2, Sp2):  # two-site part of H
     """Given the operators S^z and S^+ on two sites in different Hilbert spaces
     (e.g. two blocks), returns a Kronecker product representing the
     corresponding two-site term in the Hamiltonian that joins the two sites.
     """
-    Hinteract = 0
-    for hleft,hright in zip(hleft_list,hright_list):    
-        Hinteract += kron(hleft,hright) 
-    
     J = Jz = 1.
-    Hinteract = J * Hinteract
-    return Hinteract
+    return (
+        (J / 2) * (kron(Sp1, Sp2.conjugate().transpose()) + kron(Sp1.conjugate().transpose(), Sp2)) +
+        Jz * kron(Sz1, Sz2)
+    )
 
 # conn refers to the connection operator, that is, the operator on the edge of
 # the block, on the interior of the chain.  We need to be able to represent S^z
 # and S^+ on that site in the current basis in order to grow the chain.
-initial_block_left = Block(length=1, basis_size=model_d, operator_dict={
+initial_block = Block(length=1, basis_size=model_d, operator_dict={
     "H": H1,
-    "h1loc": Plq_right, #h1n1 h1n2
-    "h2loc": Plq_right_deg, #h2n1 h2n2
+    "conn_Sz": Sz1,
+    "conn_Sp": Sp1,
 })
 
-initial_block_right = Block(length=1, basis_size=model_d, operator_dict={
-    "H": H1,
-    "h1loc": Plq_left,
-    "h2loc": Plq_left_deg,
-})
-
-
-def enlarge_block(block, side="left"):
+def enlarge_block(block):
     """This function enlarges the provided Block by a single site, returning an
     EnlargedBlock.
     """
@@ -107,27 +74,11 @@ def enlarge_block(block, side="left"):
     # `kron` uses the tensor product convention making blocks of the second
     # array scaled by the first.  As such, we adopt this convention for
     # Kronecker products throughout the code.
-    
-    if side == "left":
-        left_block = o["h1loc"] + o["h1loc"]
-        right_block = Plq_right + Plq_right_deg
-        
-        enlarged_operator_dict = {
-                "H": kron(o["H"], identity(model_d)) + kron(identity(mblock), H1) + H2(right_block, left_block),
-                "h1loc": [kron(identity(mblock), op) for op in Plq_left],
-                "h2loc": [kron(identity(mblock), op) for op in Plq_left_deg],
-                }
-    else:
-        right_block = o["h1loc"] + o["h1loc"]
-        left_block = Plq_left + Plq_left_deg
-        
-        enlarged_operator_dict = {
-                "H": kron(o["H"], identity(model_d)) + kron(identity(mblock), H1) + H2(right_block, left_block),
-                "h1loc": [kron(op, identity(mblock)) for op in Plq_right],
-                "h2loc": [kron(op, identity(mblock)) for op in Plq_right_deg],
-
-                }
-        
+    enlarged_operator_dict = {
+        "H": kron(o["H"], identity(model_d)) + kron(identity(mblock), H1) + H2(o["conn_Sz"], o["conn_Sp"], Sz1, Sp1),
+        "conn_Sz": kron(identity(mblock), Sz1),
+        "conn_Sp": kron(identity(mblock), Sp1),
+    }
 
     return EnlargedBlock(length=(block.length + 1),
                          basis_size=(block.basis_size * model_d),
@@ -147,11 +98,11 @@ def single_dmrg_step(sys, env, m):
     assert is_valid_block(env)
 
     # Enlarge each block by a single site.
-    sys_enl = enlarge_block(sys,'left')
+    sys_enl = enlarge_block(sys)
     if sys is env:  # no need to recalculate a second time
         env_enl = sys_enl
     else:
-        env_enl = enlarge_block(env,'right')
+        env_enl = enlarge_block(env)
 
     assert is_valid_enlarged_block(sys_enl)
     assert is_valid_enlarged_block(env_enl)
@@ -162,7 +113,7 @@ def single_dmrg_step(sys, env, m):
     sys_enl_op = sys_enl.operator_dict
     env_enl_op = env_enl.operator_dict
     superblock_hamiltonian = kron(sys_enl_op["H"], identity(m_env_enl)) + kron(identity(m_sys_enl), env_enl_op["H"]) + \
-                             H2(sys_enl_op["h1loc"] + sys_enl_op["h2loc"], env_enl_op["h1loc"] + env_enl_op["h2loc"])
+                             H2(sys_enl_op["conn_Sz"], sys_enl_op["conn_Sp"], env_enl_op["conn_Sz"], env_enl_op["conn_Sp"])
 
     # Call ARPACK to find the superblock ground state.  ("SA" means find the
     # "smallest in amplitude" eigenvalue.)
@@ -199,28 +150,13 @@ def single_dmrg_step(sys, env, m):
     # Rotate and truncate each operator.
     new_operator_dict = {}
     for name, op in sys_enl.operator_dict.items():
-        if type(op) is list:
-            new_operator_dict[name] = [rotate_and_truncate(o, transformation_matrix) for o in op]
-        else:
-            new_operator_dict[name] = rotate_and_truncate(op, transformation_matrix)
+        new_operator_dict[name] = rotate_and_truncate(op, transformation_matrix)
 
-    new_left_block = Block(length=sys_enl.length,
-                     basis_size=my_m,
-                     operator_dict=new_operator_dict)
-    
-        # Rotate and truncate each operator.
-    new_operator_dict = {}
-    for name, op in sys_enl.operator_dict.items():
-        if type(op) is list:
-            new_operator_dict[name] = [rotate_and_truncate(o, transformation_matrix) for o in op]
-        else:
-            new_operator_dict[name] = rotate_and_truncate(op, transformation_matrix)
-
-    new_right_block = Block(length=sys_enl.length,
+    newblock = Block(length=sys_enl.length,
                      basis_size=my_m,
                      operator_dict=new_operator_dict)
 
-    return new_left_block, new_right_block, energy
+    return newblock, energy
 
 def graphic(sys_block, env_block, sys_label="l"):
     """Returns a graphical representation of the DMRG step we are about to
@@ -255,24 +191,23 @@ def finite_system_algorithm(L, m_warmup, m_sweep_list):
     # we construct a block, we save it for future reference as both a left
     # ("l") and right ("r") block, as the infinite system algorithm assumes the
     # environment is a mirror image of the system.
-    right_block = initial_block_right
-    left_block = initial_block_left
-    block_disk["l", right_block.length] = right_block
-    block_disk["r", left_block.length] = left_block
-    while left_block.length + right_block.length < L:
+    block = initial_block
+    block_disk["l", block.length] = block
+    block_disk["r", block.length] = block
+    while 2 * block.length < L:
         # Perform a single DMRG step and save the new Block to "disk"
-        print(graphic(left_block, right_block))
-        left_block, right_block, energy = single_dmrg_step(left_block, right_block, m=m_warmup)
-        print("E/L =", energy / (left_block.length * 2))
-        block_disk["l", left_block.length] = left_block
-        block_disk["r", right_block.length] = right_block
+        print(graphic(block, block))
+        block, energy = single_dmrg_step(block, block, m=m_warmup)
+        print("E/L =", energy / (block.length * 2))
+        block_disk["l", block.length] = block
+        block_disk["r", block.length] = block
 
     # Now that the system is built up to its full size, we perform sweeps using
     # the finite system algorithm.  At first the left block will act as the
     # system, growing at the expense of the right block (the environment), but
     # once we come to the end of the chain these roles will be reversed.
     sys_label, env_label = "l", "r"
-    sys_block = left_block; del left_block; del right_block  # rename the variable
+    sys_block = block; del block  # rename the variable
     for m in m_sweep_list:
         while True:
             # Load the appropriate environment block from "disk"
@@ -284,7 +219,7 @@ def finite_system_algorithm(L, m_warmup, m_sweep_list):
 
             # Perform a single DMRG step.
             print(graphic(sys_block, env_block, sys_label))
-            sys_block, env_block, energy = single_dmrg_step(sys_block, env_block, m=m)
+            sys_block, energy = single_dmrg_step(sys_block, env_block, m=m)
 
             print("E/L =", energy / L)
 
@@ -299,6 +234,4 @@ if __name__ == "__main__":
     np.set_printoptions(precision=10, suppress=True, threshold=10000, linewidth=300)
 
     #infinite_system_algorithm(L=100, m=20)
-    finite_system_algorithm(L=10, m_warmup=30, m_sweep_list=[10, 20, 30, 40, 40])
-# -*- coding: utf-8 -*-
-
+    finite_system_algorithm(L=20, m_warmup=10, m_sweep_list=[10, 20, 30, 40, 40])
