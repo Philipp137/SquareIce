@@ -1,4 +1,3 @@
-/* construct gauge inequivalent states of the U(1) model  on triangular lattice */
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
