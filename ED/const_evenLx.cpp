@@ -45,6 +45,16 @@ void conststates(){
   n=0;
   while(n<NST){
      
+    // remove states that do not satisfy the OBC 
+    if(FBC){
+      p=0;  cG=str[p]; 
+      if(cG!='5'){ addATpos(str,p); n=n+pow(6,VOL2-1-p); continue; }
+      p=(LX/2); cG=str[p];
+      if((cG!='0')&&(cG!='1')&&(cG!='3')){ addATpos(str,l); n=n+pow(6,VOL2-1-l); continue; }     
+      p=VOL2-1; cG=str[p];
+      if((cG!='0')&&(cG!='1')&&(cG!='4')){ addATpos(str,l); n=n+pow(6,VOL2-1-l); continue; }     
+    }
+
     //if((n%101559956668416)==0) printf("%lld\n",n);
     for(l=0;l<VOL;l++) linkset[l]=0; 
     flagGI=1; flagJUMP=0;
@@ -55,17 +65,6 @@ void conststates(){
       yf=next[DIM+2][q]; yb=next[DIM-2][q];
       // convert to 1d co-ordinates on the lattice configuration
       q0x=2*q; q0y=2*q+1; qx=2*xb; qy=2*yb+1;
-      // to impose the OBC, we impose conditions on the Gauss' Law conditions at
-      // different points on the lattice
-      if((FBC)&&(l==0)){
-         if(cG!='5'){ addATpos(str,l); n=n+pow(6,VOL2-1-l); flagJUMP=1; flagGI=0; break;}
-      }
-      if((FBC)&&(l==(LX/2))){
-	 if((cG!='0')&&(cG!='1')&&(cG!='3')){ addATpos(str,l); n=n+pow(6,VOL2-1-l); flagJUMP=1; flagGI=0; break; }     
-      }
-      if((FBC)&&(l==(VOL2-1))){
-        if((cG!='0')&&(cG!='1')&&(cG!='4')){ addATpos(str,l); n=n+pow(6,VOL2-1-l); flagJUMP=1; flagGI=0; break; }     
-      }
       
       // from Fig 1 (left to right) in https://arxiv.org/pdf/1311.2459.pdf
       switch(cG){
@@ -104,7 +103,14 @@ void conststates(){
       }
     }// if flagGI closure 
      
-    if(flagGI) storeconf(conf,&count);
+    if(flagGI){
+	    storeconf(conf,&count);
+            // check to see if all links are set
+            for(l=0;l<VOL;l++){
+              std::cout<<"Site = "<<l<<"; #-links set  = "<<linkset[l]<<std::endl;
+            }
+            printf("state=%s; str[0]=%c \n",str,str[0]);
+    }
     if(flagJUMP==0){ add(str,VOL2); n++; }
   }
   printf("No of gauge invariant states: %d %ld\n",count,basis.size());
