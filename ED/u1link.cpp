@@ -84,7 +84,7 @@ int main(){
   /* set up the flag for fixed boundary condition */
   FBC = 1;
   /* build basis states satisfying Gauss' Law */
-  if((LX%2)==0) conststates();
+  if((LX%2)==0) conststatesEVEN();
   else if((LX%2)==1) conststatesODD();
   
   /* get number of winding number sectors */

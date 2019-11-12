@@ -15,7 +15,7 @@
 // I need to use a different routine for the case when the effective 
 // Lx is even. 
 
-void conststates(){
+void conststatesEVEN(){
   extern void add(char*,int);
   extern void addATpos(char*,int);
   extern int checkGL(bool*,int);
@@ -106,10 +106,10 @@ void conststates(){
     if(flagGI){
 	    storeconf(conf,&count);
             // check to see if all links are set
-            for(l=0;l<VOL;l++){
-              std::cout<<"Site = "<<l<<"; #-links set  = "<<linkset[l]<<std::endl;
-            }
-            printf("state=%s; str[0]=%c \n",str,str[0]);
+            //for(l=0;l<VOL;l++){
+            //  std::cout<<"Site = "<<l<<"; #-links set  = "<<linkset[l]<<std::endl;
+            //}
+            //printf("state=%s; str[0]=%c \n",str,str[0]);
     }
     if(flagJUMP==0){ add(str,VOL2); n++; }
   }

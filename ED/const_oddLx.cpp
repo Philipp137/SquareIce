@@ -39,33 +39,18 @@ void conststatesODD(){
  
   n=0;
   while(n<NST){
-
-    //printf("state being examined =%s; \n",str);
-
     // Eliminate states based on Gauss Law realizations on pair of neighboring sites; see notes below
     // i) locations (LX-1)/2 and 0 in str  (+x neighbor for y=1, x=1)
     p = (LX-1)/2; cG1 = str[p]; cG2 = str[0];
-    // need to test the two methods; and determine which one is faster; do not delete
-    //if(      (cG1=='0') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){ add(str,cSIZE); n++; continue; }
-    //else if( (cG1=='1') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){ add(str,cSIZE); n++; continue; }
-    //else if( (cG1=='2') && ((cG2=='0')||(cG2=='1')||(cG2=='3')) ){ add(str,cSIZE); n++; continue; }
-    //else if( (cG1=='3') && ((cG2=='0')||(cG2=='1')||(cG2=='3')) ){ add(str,cSIZE); n++; continue; }
-    //else if( (cG1=='4') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){ add(str,cSIZE); n++; continue; }
-    //else if( (cG1=='5') && ((cG2=='0')||(cG2=='1')||(cG2=='3')) ){ add(str,cSIZE); n++; continue; } 
-    if(      (cG1=='0') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){      
-    	    addATpos(str,p); n=n+pow(6,cSIZE-1-p); continue; }
-    else if( (cG1=='1') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){ 
-    	    addATpos(str,p); n=n+pow(6,cSIZE-1-p); continue; }
-    else if( (cG1=='2') && ((cG2=='0')||(cG2=='1')||(cG2=='3')) ){ 
-    	    addATpos(str,p); n=n+pow(6,cSIZE-1-p); continue; }
-    else if( (cG1=='3') && ((cG2=='0')||(cG2=='1')||(cG2=='3')) ){ 
-    	    addATpos(str,p); n=n+pow(6,cSIZE-1-p); continue; }
-    else if( (cG1=='4') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){ 
-    	    addATpos(str,p); n=n+pow(6,cSIZE-1-p); continue; }
-    else if( (cG1=='5') && ((cG2=='0')||(cG2=='1')||(cG2=='3')) ){ 
-    	    addATpos(str,p); n=n+pow(6,cSIZE-1-p); continue; } 
+    // It is dangerous to do addATpos(); it skips allowed states!
+    if(      (cG1=='0') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){ add(str,cSIZE); n++; continue; }
+    else if( (cG1=='1') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){ add(str,cSIZE); n++; continue; }
+    else if( (cG1=='2') && ((cG2=='0')||(cG2=='1')||(cG2=='3')) ){ add(str,cSIZE); n++; continue; }
+    else if( (cG1=='3') && ((cG2=='0')||(cG2=='1')||(cG2=='3')) ){ add(str,cSIZE); n++; continue; }
+    else if( (cG1=='4') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){ add(str,cSIZE); n++; continue; }
+    else if( (cG1=='5') && ((cG2=='0')||(cG2=='1')||(cG2=='3')) ){ add(str,cSIZE); n++; continue; } 
     // ii) locations cSIZE-1 and cSIZE-2 in str (+x neighbor for y=2, x=Lx-1)
-    cG1 = str[cSIZE-1]; cG2 = str[cSIZE-2]; 
+    cG1 = str[cSIZE-2]; cG2 = str[cSIZE-1]; 
     // in this case, using the formula n=n+pow(6,cSIZE-1-p) is same as n++
     if(      (cG1=='0') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){ add(str,cSIZE); n++; continue; }
     else if( (cG1=='1') && ((cG2=='2')||(cG2=='4')||(cG2=='5')) ){ add(str,cSIZE); n++; continue; }
@@ -75,21 +60,21 @@ void conststatesODD(){
     else if( (cG1=='5') && ((cG2=='0')||(cG2=='1')||(cG2=='3')) ){ add(str,cSIZE); n++; continue; }
     // iii) locations (LX-1)/2 and cSIZE-1 in str (+y neighbor for x=Lx) 
     p = (LX-1)/2; q = cSIZE-1; cG1 = str[p]; cG2 = str[q];
-    if(      (cG1=='2') &&  (cG2!='0')) {             add(str,cSIZE); n++; continue; }
-    else if( (cG1=='3') && ((cG2!='1')||(cG2!='4'))){ add(str,cSIZE); n++; continue; }
-    else if( (cG1=='5') && ((cG2!='1')||(cG2!='4'))){ add(str,cSIZE); n++; continue; }
+    if(      (cG1=='2') &&  (cG2!='0')) {              add(str,cSIZE); n++; continue; }
+    else if( (cG1=='3') && ((cG2!='1')&&(cG2!='4'))){  add(str,cSIZE); n++; continue; }
+    else if( (cG1=='5') && ((cG2!='1')&&(cG2!='4'))){  add(str,cSIZE); n++; continue; }
     // the rest of the cases are removed by the conditions below
     // remove states that do not satisfy the OBC
     if(FBC){
       p = 0; cG = str[p]; // str[0] can only have realization 5 of the Gauss' Law
-      if(cG!='5'){ addATpos(str,p); n=n+pow(6,cSIZE-1-p); continue; }
+      if(cG!='5'){                         add(str,cSIZE); n++; continue; }
       p = (LX-1)/2; cG = str[p]; // str[p] has the +x link to be -1/2
-      if((cG=='0')||(cG=='1')||(cG=='4')){ addATpos(str,p); n=n+pow(6,cSIZE-1-p); continue; }
+      if((cG=='0')||(cG=='1')||(cG=='4')){ add(str,cSIZE); n++; continue; }	    
       p = (LX+1)/2; cG = str[p]; // str[p] has the -x link to be +1/2
-      if((cG=='2')||(cG=='4')||(cG=='5')){ addATpos(str,p); n=n+pow(6,cSIZE-1-p); continue; }
+      if((cG=='2')||(cG=='4')||(cG=='5')){ add(str,cSIZE); n++; continue; }	    
       p = cSIZE-1; cG = str[p];  // str[p] has the +x link to be +1/2
-      if((cG=='2')||(cG=='3')||(cG=='5')){ addATpos(str,p); n=n+pow(6,cSIZE-1-p); continue; }
-    }
+      if((cG=='2')||(cG=='3')||(cG=='5')){ add(str,cSIZE); n++; continue; }    
+    } //close if(FBC)
 
     for(l=0;l<VOL;l++) linkset[l]=0;
     flagGI=1; flagJUMP=0;
@@ -144,16 +129,16 @@ void conststatesODD(){
       for(p=VOL2;p<VOL;p++){
          pp=chk2lin[p]; 
          flagGI = checkGL(conf,pp);
-         if(flagGI==0) break;
+	 if(flagGI==0) break;
       }
     }// if flagGI closure
     if(flagGI){
 	    storeconf(conf,&count);
             // check to see if all links are set
-            for(l=0;l<VOL;l++){
-              std::cout<<"Site = "<<l<<"; #-links set  = "<<linkset[l]<<std::endl;
-            }
-            printf("state=%s; str[0]=%c \n",str,str[0]);
+            //for(l=0;l<VOL;l++){
+            //  std::cout<<"Site = "<<l<<"; #-links set  = "<<linkset[l]<<std::endl;
+            //}
+            //printf("state=%s; str[0]=%c \n",str,str[0]);
     }
     if(flagJUMP==0){ add(str,cSIZE); n++; }
   }

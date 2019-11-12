@@ -104,7 +104,7 @@ extern void printvec(std::vector<double>&);
 
 /* routines */
 void initneighbor(void);
-void conststates(void);
+void conststatesEVEN(void);
 void conststatesODD(void);
 void constH(int);
 void winding_no_decompose(void);
