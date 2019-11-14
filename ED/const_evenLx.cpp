@@ -121,7 +121,7 @@ void conststatesEVEN(){
   count1 = basis.size();
   printf("No of gauge invariant states after removal of duplicates: %d\n",count1);
   
-  Pbasis(count1);
+  //Pbasis(count1);
 
   NTOT = count1;
 }

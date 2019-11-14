@@ -121,7 +121,7 @@ void diag_LAPACK_RRR(MKL_INT sector, std::vector<double>& matrix, std::vector<do
   evec.insert(evec.begin(), Z, Z+N*N);
 
   // see notes in the previous routine. Same applies here!
-  //fileprint_matrix( "Eigenvalues.dat", 1, N, W, 1 );
+  fileprint_matrix( "Eigenvalues.dat", 1, N, W, 1 );
   //eig_print(eval,evec,N);
 
   // check the eigenvectors by acting the Hamiltonian on them, and subtracting the

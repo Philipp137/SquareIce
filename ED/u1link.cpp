@@ -16,9 +16,9 @@ int *nextCHK[2*DIM+1];
 int *chk2lin,*lin2chk;
 int LX,LY,VOL,VOL2;
 // Labels the winding number sectors
-// lookup[LX/2+wx][LY/2+wy] refers to the (wx,wy) winding number sector
+// lookup[LX+1+wx] refers to the wx winding number sector
 int nWindSector;
-int **lookup;
+int *lookup;
 std::vector<WindNo> Wind;
 unsigned int nWind;
 double lam,Ti,Tf,dT;
@@ -37,14 +37,13 @@ int main(){
   int x,y;
   int wx,wy;
   int sector;
-  WindNo SectorZero;
   extern void initneighbor(void);
-  extern void conststates(void);
+  extern void conststatesEVEN(void);
   extern void conststatesODD(void);
   extern void printbasis(void);
   extern int** allocateint2d(int, int);
   extern void deallocateint2d(int**,int,int);
-  extern int calc_WindNo(int,int);
+  extern int calc_WindNo(int);
 
   fptr = fopen("QUEUE","r");
   if(fptr == NULL){
@@ -65,7 +64,7 @@ int main(){
   VOL2 = VOL/2;
 
   // decide whether to check the results of the diagonalization 
-  CHKDIAG=2;
+  CHKDIAG=1;
 
   /* Initialize nearest neighbours */
   for(i=0;i<=2*DIM;i++){
@@ -79,7 +78,7 @@ int main(){
   initneighbor();
   
   /* Winding number sectors */
-  lookup = allocateint2d(LX+1,LY+1);
+  lookup = (int *)malloc((2*(LX-1)+1)*sizeof(int));
 
   /* set up the flag for fixed boundary condition */
   FBC = 1;
@@ -88,14 +87,15 @@ int main(){
   else if((LX%2)==1) conststatesODD();
   
   /* get number of winding number sectors */
-  //nWind = calc_WindNo(LX-2,LY);  
-  //Wind.reserve(nWind); 
-  //winding_no_decompose();
+  nWind = calc_WindNo(LX);  
+  Wind.reserve(nWind); 
+  winding_no_decompose();
   // get the winding number sector (wx,wy)
-  //wx = 0; wy = 0;
-  //sector = lookup[LX/2+wx][LY/2+wy];
-  //constH();
-
+  if((LX%2)==0)      wx = 1;
+  else if((LX%2)==1) wx = 0; 
+  sector = lookup[LX-1+wx];
+  constH(sector);
+  std::cout<<"Back from the ED routine"<<std::endl;
 
   // calculate the expectation value of Oflip for every eigenstate 
   //calc_Oflip(sector);
@@ -112,8 +112,7 @@ int main(){
 
   /* Clear memory */
   for(i=0;i<=2*DIM;i++){  free(next[i]); free(nextCHK[i]); }
-  free(chk2lin); free(lin2chk);
-  deallocateint2d(lookup,LX+1,LY+1);
+  free(chk2lin); free(lin2chk); free(lookup);
   Wind.clear();
 
   return 0;

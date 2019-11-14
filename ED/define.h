@@ -15,7 +15,7 @@ extern int *chk2lin,*lin2chk;
 extern int LX,LY,VOL,VOL2;
 extern int nWindSector;
 extern unsigned int nWind;
-extern int **lookup;
+extern int *lookup;
 extern double lam,Ti,Tf,dT;
 /* NTOT = total no of basis states 
  * NH   = states not killed by H  */
