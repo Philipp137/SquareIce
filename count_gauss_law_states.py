@@ -151,7 +151,7 @@ def gauss_law_is_satisfied(config,boundary_left,boundary_right,Lx,Ly):
     return True
 
 # %%
-Lx =4
+Lx =2
 Ly = 2
 boundary=[-1, 1,-1] # spins in vertical direction of boundary at ix = 0 and ix = Lx
 Nlinks = 2*Lx*Ly
@@ -173,4 +173,6 @@ for n,config in enumerate(list_of_lattice_config):
         draw_lattice(config,Lx,Ly,boundary)
 
         
+print(list_of_lattice_config)
+
 print("Number of states fulfilling the gauss law: ",count)             

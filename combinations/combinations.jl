@@ -83,23 +83,47 @@ function counting_gauge_invariant_states(array,x_max,y_max)
         j=1
         while i < 2*x_max && check;
             while j < y_max+1 && check; 
-                check =  abs(gauge_invariant_site_exp_val(array[k,:,:] ,i,j,x_max,y_max)) > 0.0001
+                check =  abs(gauge_invariant_site_exp_val(array[k,:,:] ,i,j,x_max,y_max)) > 0.0001 
                 j+=1
             end
             j=1
-            i+=1
+            i+=2
         end
-        if check push!(states, k) end
+        if check 
+            push!(states, k) 
+        else
+            println(k)
+        end
         check=true
+
     end
 
 return states
 end
 
-Lx=5  
+Lx=2
 Ly=2
 
 array=rectangularize(Lx,Ly)
+println(size(array[:,1,1])[1])
+for i in [1:1:size(array[:,1,1])[1];];
+    println(array[i ,:,:] )
+end
 states=counting_gauge_invariant_states(array,Lx,Ly)
 num_states=size(states)[1]
 println("Lx=$Lx   Ly=$Ly   Number of states = $num_states " )
+
+println(states)
+#for i in states;
+#    println(array[i ,:,:] )
+#end
+#    println(array[22,:,:] )
+#println(array[38,:,:] )
+#println(array[54,:,:] )
+
+
+
+
+#correct resutls
+#L_x=2   N=5
+#L_x=3   N=14    We think it is true but not 100%

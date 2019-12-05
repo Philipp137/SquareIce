@@ -1,3 +1,13 @@
 N    D       E      
 100  100    -110.68865106597143   
 100  10     -110.5997724574445  100  20    -110.6787740866328   
+
+
+Those are the rusults of dmrg without imposing gauge invariance and counting only the plaquettes in LX 
+
+
+N_plaquesttes   D       E
+4               200   -4.681054477118412
+5               50    -5.794074384986498
+6               50    -6.906751395035723
+7               50    -8.02043959533035
