@@ -41,22 +41,24 @@ function applyH1(AC, FL, FR, M)
 end
 
 
-function updateleftenv(A, M, FL)
-    @tensor FL[α,a,β] := FL[α',a',β']*A[β',s',β]*M[a',s,a,s']*conj(A[α',s,α])
-end
 
-function updaterightenv(A, M, FR)
-    @tensor FR[α,a,β] := A[α,s',α']*FR[α',a',β']*M[a,s,a',s']*conj(A[β,s,β'])
-end
 """
-constuct the local gauss opertor for a spin s in a space of  
+    U, S, Vd = svdtrunc(A; truncdim = max(size(A)...), truncerr = 0.)
+
+Perform a truncated SVD, with maximum number of singular values to keep equal to `truncdim`
+or truncating any singular values smaller than `truncerr`. If both options are provided, the
+smallest number of singular values will be kept.
+
+This returns matrix U, a diagonal matrix (not a vector) S, and
+Vt such that A ≈ U * S * Vt
 """
-function projector_on_gauss_operator(MPS,Projector)
-    @tensor 
+
+
+function svdtrunc(A; truncdim = max(size(A)...), truncerr = 0.)
+    F = svd(A)
+    d = min(truncdim, count(F.S .>= truncerr))
+    return F.U[:,1:d], diagm(0=>F.S[1:d]), F.Vt[1:d, :]
 end
-
-
-
 
 
 function dmrg1sweep!(A, H, F = nothing; verbose = true, kwargs...)
@@ -107,7 +109,6 @@ function dmrg1sweep!(A, H, F = nothing; verbose = true, kwargs...)
     return E, A, F
 end
 
-
 function dmrgconvergence!(A, M ;  verbose = true, kwargs...)
     max_sweep=1000000
     conv = 1.0e-8
@@ -139,7 +140,5 @@ function measure1siteoperator(A, O)
     end
     return expval
 end
-
-
 
 
