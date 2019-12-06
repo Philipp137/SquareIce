@@ -103,7 +103,7 @@ function mpoqlm_fixed_boundary_contitions(N::Int;   coupling=1. )
     MN[4,:,D,:] = operator_2_dag
     MN[5,:,D,:] = operator_4_dag
 
-    mpo= [ M1[1:1,:,:,:] ]
+    mpo= [ M[1:1,:,:,:] ]
 
     for site = 2:N-1;
         push!(mpo, M[:,:,:,:])
