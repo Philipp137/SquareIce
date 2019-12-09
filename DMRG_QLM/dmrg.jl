@@ -7,8 +7,8 @@ include("qlm_mpo.jl")
 include("func_dmrg.jl")
 
 s=16
-D= 50
-N = 9
+D= 40
+N = 100
 
 A = randmps(N, s, D);
 

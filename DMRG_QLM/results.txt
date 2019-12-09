@@ -3,7 +3,7 @@ N    D       E
 100  10     -110.5997724574445  100  20    -110.6787740866328   
 
 
-Those are the rusults of dmrg without imposing gauge invariance and counting only the plaquettes in LX 
+Those are the rusults of dmrg without imposing gauge invariance and counting only the plaquettes in LX with boundari conditions fixed to +  -
 
 
 N_plaquesttes   D       E
@@ -11,3 +11,27 @@ N_plaquesttes   D       E
 5               50    -5.794074384986498
 6               50    -6.906751395035723
 7               50    -8.02043959533035
+
+
+Expectation value of the energy with a rectangular lattice (no fixed spin poiting out at the boundaries)
+
+4  50    -3.574919794839047   
+
+5  50     -4.68105447711841   
+5  200    -4.68105447711841
+
+6  50    -5.7940743849865   
+
+7  50    -6.906751395035721   
+
+8  50    -8.020439595326732   
+
+9  50    -9.134531414054047
+
+10  50   -10.24900295687074
+
+
+ED results  from Debasish
+
+Lx=5 -3.574919794839 
+Lx=6 -4.516154804374 
