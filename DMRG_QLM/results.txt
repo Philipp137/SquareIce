@@ -33,5 +33,9 @@ Expectation value of the energy with a rectangular lattice (no fixed spin poitin
 
 ED results  from Debasish
 
-Lx=5 -3.574919794839 
-Lx=6 -4.516154804374 
+Lx=5  -3.574919794839 
+Lx=6  -4.516154804374
+Lx=7  -5.794074384986 
+Lx=8  -6.779141622113
+Lx=9  -8.020439595408
+Lx=10 -9.030893505422
