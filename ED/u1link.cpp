@@ -91,7 +91,7 @@ int main(){
   Wind.reserve(nWind); 
   winding_no_decompose();
   // get the winding number sector (wx,wy)
-  if((LX%2)==0)      wx = 1;
+  if((LX%2)==0)      wx = -1;
   else if((LX%2)==1) wx = 0; 
   sector = lookup[LX-1+wx];
   constH(sector);
