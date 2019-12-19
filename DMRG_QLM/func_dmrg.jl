@@ -130,7 +130,18 @@ function measure1siteoperator(A, O)
     end
     return expval
 end
+"""
+function measure2siteoperator(A, O1, O2)
+    N = length(A)
+    ρ = ones(eltype(A[1]), 1, 1)
+    expval = Vector{ComplexF64}(undef, N)
+    for k = 1:N-1
+        @tensor v = scalar(ρ[a,b]*A[k][b,s1,c]*O1[s1',s1]*conj(A[k][a,s1',c])*A[k+1][b,s2,c]*O2[s2',s2]*conj(A[k+1][a,s2',c]))
+        expval[k] = v
+        @tensor ρ[a,b] := ρ[a',b']*A[k][b',s,b]*conj(A[k][a',s,a])
+    end
+    return expval
+end
 
 
-
-
+"""
