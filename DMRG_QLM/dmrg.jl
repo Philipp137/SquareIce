@@ -7,7 +7,7 @@ include("qlm_mpo.jl")
 include("func_dmrg.jl")
 
 s=16
-D= 100
+D= 200
 N = 9
 
 A = randmps(N, s, D);
@@ -15,7 +15,7 @@ A = randmps(N, s, D);
 
 #M =  mpoqlm(N ; coupling=1.  );
 #M =  mpoqlm_fixed_boundary_contitions(N ; coupling=1.  );
-M =  mpoqlm_fixed_with_interaction(N ; coupling=0.5  );
+M =  mpoqlm_fixed_with_interaction(N ; coupling=-1.0  );
 
 
 E, A, F = dmrgconvergence!(A, M ; verbose = true);

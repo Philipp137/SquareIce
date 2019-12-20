@@ -1,35 +1,3 @@
-N    D       E      
-100  100    -110.68865106597143   
-100  10     -110.5997724574445  100  20    -110.6787740866328   
-
-
-Those are the rusults of dmrg without imposing gauge invariance and counting only the plaquettes in LX with boundari conditions fixed to +  -
-
-
-N_plaquesttes   D       E
-4               200   -4.681054477118412
-5               50    -5.794074384986498
-6               50    -6.906751395035723
-7               50    -8.02043959533035
-
-
-Expectation value of the energy with a rectangular lattice (no fixed spin poiting out at the boundaries)
-
-4  50    -3.574919794839047   
-
-5  50     -4.68105447711841   
-5  200    -4.68105447711841
-
-6  50    -5.7940743849865   
-
-7  50    -6.906751395035721   
-
-8  50    -8.020439595326732   
-
-9  50    -9.134531414054047
-
-10  50   -10.24900295687074
-
 
 #####################################################################
 comparison between ED and DMRG
@@ -44,12 +12,12 @@ Lx        *old ED*           *new ED*              *DMRG*
 
 ################## Results for lam = -1.0 ###########################
 Lx       *new ED*              *DMRG*
- 5    -9.799949275207           
- 6    -14.158416227280
- 7    -14.879873962146
- 8    -19.234560817093
- 9    -19.957980469854
-10    -24.311246901410
+ 5    -9.799949275207           -7.974455254448452
+ 6    -14.158416227280          -10.506926661935019
+ 7    -14.879873962146          -13.04629428804542
+ 8    -19.234560817093          -15.584425848621935
+ 9    -19.957980469854          -18.122901301378754
+10    -24.311246901410          -20.66133121810221
 
 
 ################## Results for lam = 0.5  ###########################
@@ -60,3 +28,19 @@ Lx       *new ED*              *DMRG*
  8     -1.846849877302          -3.259355567692613
  9     -3.137017010059          -3.7806358280301926
 10     -2.890953314515          -4.302215138892721
+
+10  100       
+(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ 
+(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ 
+(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ 
+(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ julia dmrg.jl 
+9  100       
+(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ julia dmrg.jl 
+8  100       
+(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ julia dmrg.jl 
+7  100       
+(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ 
+(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ julia dmrg.jl 
+6  100       
+(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ julia dmrg.jl 
+5  100       
