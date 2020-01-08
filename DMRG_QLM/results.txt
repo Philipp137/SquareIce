@@ -28,19 +28,3 @@ Lx       *new ED*              *DMRG*
  8     -1.846849877302          -3.259355567692613
  9     -3.137017010059          -3.7806358280301926
 10     -2.890953314515          -4.302215138892721
-
-10  100       
-(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ 
-(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ 
-(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ 
-(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ julia dmrg.jl 
-9  100       
-(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ julia dmrg.jl 
-8  100       
-(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ julia dmrg.jl 
-7  100       
-(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ 
-(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ julia dmrg.jl 
-6  100       
-(base) paolo@paolo-N551JX:~/Desktop/tensor_network/SquareIce/DMRG_QLM$ julia dmrg.jl 
-5  100       
