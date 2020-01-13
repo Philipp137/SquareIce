@@ -48,8 +48,8 @@ void conststatesEVEN(){
     // We have chosen to impose two different kinds of OBC in the x-dir.
     // If we choose the same one as for the lattice of odd extent, then
     // the ground state is frustrated, and one gets higher GS energies.
-    // This choice is identical with the odd extent
-    /*
+    // The choice is identical with the odd extent
+    /* ( this one frustrates the symmetry breaking GS )
     if(FBC){
       p=0;  cG=str[p]; 
       if(cG!='5'){ addATpos(str,p); n=n+pow(6,VOL2-1-p); continue; }
@@ -63,12 +63,10 @@ void conststatesEVEN(){
     // remove states that do not satisfy the OBC 
     if(FBC){
       p=0;  cG=str[p]; 
-      //if(cG!='5'){ addATpos(str,p); n=n+pow(6,VOL2-1-p); continue; }
       if(cG!='3'){ addATpos(str,p); n=n+pow(6,VOL2-1-p); continue; }
       p=(LX/2); cG=str[p];
       if((cG!='0')&&(cG!='1')&&(cG!='3')){ addATpos(str,l); n=n+pow(6,VOL2-1-l); continue; }     
       p=VOL2-1; cG=str[p];
-      //if((cG!='0')&&(cG!='1')&&(cG!='4')){ addATpos(str,l); n=n+pow(6,VOL2-1-l); continue; }     
       if((cG!='2')&&(cG!='3')&&(cG!='5')){ addATpos(str,l); n=n+pow(6,VOL2-1-l); continue; }     
     }
 

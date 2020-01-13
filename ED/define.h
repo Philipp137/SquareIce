@@ -19,7 +19,7 @@ extern int *lookup;
 extern double lam,Ti,Tf,dT;
 /* NTOT = total no of basis states 
  * NH   = states not killed by H  */
-extern int NTOT;
+extern int NTOT,NH;
 extern int FBC;
 
 extern std::vector<std::vector<bool>> basis;
@@ -106,6 +106,7 @@ extern void printvec(std::vector<double>&);
 void initneighbor(void);
 void conststatesEVEN(void);
 void conststatesODD(void);
+void totalH_diag(void);
 void constH(int);
 void winding_no_decompose(void);
 void calc_Oflip(int);
