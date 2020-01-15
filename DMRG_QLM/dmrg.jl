@@ -7,8 +7,8 @@ include("qlm_mpo.jl")
 include("func_dmrg.jl")
 
 s=16
-D= 100
-N = 9
+D= 10
+N = 7
 
 A = randmps(N, s, D);
 
@@ -31,7 +31,7 @@ u = [1. 0.; 0. 1.]
 pp = [1. 0.; 0. 0.]
 pm = [0. 0.; 0. 1.]
 
-O=kron(kron(kron(sz,sz),u),u)
+O=kron(kron(kron(u,u),sz),sz)
 
 winding_number=measure1siteoperator(A,O)
 
@@ -40,21 +40,7 @@ println(winding_number)
 
 
 println(sum(winding_number) )
-"""
-I=ones(N)
 
-@tensor v = scalar(I[a]*winding_number[a])
+E = measure_mpo!(A,M)
 
-println(v-winding_number[N])
-
-
-O=kron(kron(kron(u,u),sz),u)
-
-winding_number=measure1siteoperator(A,O)
-
-println(winding_number)
-
-@tensor v = scalar(I[a]*winding_number[a])
-
-println(v-winding_number[N])
-"""
+println(E)

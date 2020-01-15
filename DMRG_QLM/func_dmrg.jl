@@ -130,18 +130,23 @@ function measure1siteoperator(A, O)
     end
     return expval
 end
-"""
-function measure2siteoperator(A, O1, O2)
+
+
+
+function measure_mpo!(A, M )
     N = length(A)
-    ρ = ones(eltype(A[1]), 1, 1)
-    expval = Vector{ComplexF64}(undef, N)
-    for k = 1:N-1
-        @tensor v = scalar(ρ[a,b]*A[k][b,s1,c]*O1[s1',s1]*conj(A[k][a,s1',c])*A[k+1][b,s2,c]*O2[s2',s2]*conj(A[k+1][a,s2',c]))
-        expval[k] = v
-        @tensor ρ[a,b] := ρ[a',b']*A[k][b',s,b]*conj(A[k][a',s,a])
+    F = Vector{Any}(undef, N+2)
+    F[1] = fill!(similar(M[1], (1,1,1)), 1)
+    F[N+2] = fill!(similar(M[1], (1,1,1)), 1)
+    for k = N:-1:1
+        F[k+1] = updaterightenv(A[k], M[k], F[k+2])
     end
-    return expval
-end
+    for k = 1:N
+        F[k+1] = updateleftenv(A[k], M[k], F[k])
+    end
+    FL=F[N+1]
+    FR=F[N+2]
+   @tensor E = scalar(  FL[α,a,α']*FR[α',a,α]   )
+    return E 
+    end
 
-
-"""
