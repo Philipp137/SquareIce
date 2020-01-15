@@ -102,3 +102,13 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# some tar and zips
+*.synctex.gz
+*.tar
+
+#other stuff
+*.un~
+*.tags
+*.swp
+

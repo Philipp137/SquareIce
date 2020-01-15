@@ -85,17 +85,19 @@ int main(){
   /* build basis states satisfying Gauss' Law */
   if((LX%2)==0) conststatesEVEN();
   else if((LX%2)==1) conststatesODD();
+
+  totalH_diag();
   
   /* get number of winding number sectors */
-  nWind = calc_WindNo(LX);  
-  Wind.reserve(nWind); 
-  winding_no_decompose();
+  //nWind = calc_WindNo(LX);  
+  //Wind.reserve(nWind); 
+  //winding_no_decompose();
   // get the winding number sector (wx,wy)
-  if((LX%2)==0)      wx = -1;
-  else if((LX%2)==1) wx = 0; 
-  sector = lookup[LX-1+wx];
-  constH(sector);
-  std::cout<<"Back from the ED routine"<<std::endl;
+  //if((LX%2)==0)      wx = -1;
+  //else if((LX%2)==1) wx = 0; 
+  //sector = lookup[LX-1+wx];
+  //constH(sector);
+  //std::cout<<"Back from the ED routine"<<std::endl;
 
   // calculate the expectation value of Oflip for every eigenstate 
   //calc_Oflip(sector);
@@ -112,8 +114,9 @@ int main(){
 
   /* Clear memory */
   for(i=0;i<=2*DIM;i++){  free(next[i]); free(nextCHK[i]); }
-  free(chk2lin); free(lin2chk); free(lookup);
-  Wind.clear();
+  free(chk2lin); free(lin2chk); 
+  //free(lookup);
+  //Wind.clear();
 
   return 0;
 }

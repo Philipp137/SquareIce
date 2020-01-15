@@ -40,7 +40,7 @@ void diag_LAPACK(MKL_INT sector, std::vector<double>& matrix, std::vector<double
 
     /* Solve eigenproblem */
     info = LAPACKE_dsyev( LAPACK_COL_MAJOR, 'V', 'U', N, A, LDA, W );
-    printf("Back from the routine and working properly. Info = %ld. Eval[0]=%f\n",info,W[0]);
+    printf("Back from the routine and working properly. Info = %d. Eval[0]=%f\n",info,W[0]);
     /* Check for convergence */
     if( info > 0 ) {
         printf( "The algorithm failed to compute eigenvalues.\n" );
@@ -115,7 +115,7 @@ void diag_LAPACK_RRR(MKL_INT sector, std::vector<double>& matrix, std::vector<do
      printf( "The algorithm failed to compute eigenvalues.\n" );
      exit(1);
   }
-  printf("Back from the routine and working properly. Info = %ld. Eval[0]=%e\n",info,W[0]);
+  printf("Back from the routine and working properly. Info = %d. Eval[0]=%e\n",info,W[0]);
   // copy eigenvalues and eigenvectors to main code
   eval.insert(eval.begin(), W, W+N);
   evec.insert(evec.begin(), Z, Z+N*N);
@@ -212,7 +212,7 @@ extern void check_eigvecs(MKL_INT size, std::vector<double> &matrix, std::vector
        cblas_dsymv(layout, uplo, size, 1.0, aa, size, v1, 1, 0.0, v2, 1);
        tryeval = cblas_ddot(size, v2, 1, v1, 1) - evals[i];
        //if(tryeval > 1e-10) fprintf(outfile,"%ld %.12lf\n",i,tryeval);
-       fprintf(outfile,"%ld %.12lf\n",i,tryeval);
+       fprintf(outfile,"%d %.12lf\n",i,tryeval);
      }
      fclose(outfile);
   }
@@ -226,7 +226,7 @@ extern void check_eigvecs(MKL_INT size, std::vector<double> &matrix, std::vector
        cblas_dsymv(layout, uplo, size, 1.0, aa, size, v1, 1, 0.0, v2, 1);
        tryeval = cblas_ddot(size, v2, 1, v1, 1) - evals[tryvec];
        //if(tryeval > 1e-10) fprintf(outfile,"%ld %.12lf\n",i,tryeval);
-       fprintf(outfile,"%ld %.12lf\n",tryvec,tryeval);
+       fprintf(outfile,"%d %.12lf\n",tryvec,tryeval);
      }
      fclose(outfile);
   }
