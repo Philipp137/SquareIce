@@ -5,17 +5,17 @@ using JLD
 
 include("qlm_mpo.jl")
 include("func_dmrg.jl")
-
+include("chess_operator.jl")
 s=16
-D= 10
-N = 7
+D= 20
+N = 21
 
 A = randmps(N, s, D);
 
 
 #M =  mpoqlm(N ; coupling=1.  );
 #M =  mpoqlm_fixed_boundary_contitions(N ; coupling=1.  );
-M =  mpoqlm_fixed_with_interaction(N ; coupling=-0.0  );
+M =  mpoqlm_fixed_with_interaction(N ; coupling=0.0  );
 
 
 E, A, F = dmrgconvergence!(A, M ; verbose = true);
@@ -34,13 +34,16 @@ pm = [0. 0.; 0. 1.]
 O=kron(kron(kron(u,u),sz),sz)
 
 winding_number=measure1siteoperator(A,O)
-
+winding_number= deleteat!(winding_number , N)
 println(winding_number)
 
 
 
 println(sum(winding_number) )
 
-E = measure_mpo!(A,M)
 
-println(E)
+chess_operator=chess_operator_down(N)
+
+down = measure_mpo!(A,chess_operator)
+
+println(down)
