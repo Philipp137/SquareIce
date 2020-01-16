@@ -1,4 +1,3 @@
-
 using LinearAlgebra, TensorOperations, KrylovKit
 
 
@@ -125,14 +124,12 @@ function mpoqlm_fixed_with_interaction(N::Int;   coupling=-1. )
     s=16
     D = 10
     M = zeros(D, s, D, s) ;
-    M1 = zeros(D, s, D, s) ;
     MN = zeros(D, s, D, s) ;
 
     I= operator_2=kron(kron(kron(u,u),u),u)
 
 
     M[1,:,1,:] = I ;    M[ D,:,D,:] = I
-    M1[1,:,1,:] = I ;    M1[ D,:,D,:] = I
     MN[1,:,1,:] = I ;    MN[ D,:,D,:] = I
 
     operator_1=-1*kron(kron(kron(sm,u),sm),sp)
