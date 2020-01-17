@@ -5,17 +5,17 @@ using JLD
 
 include("qlm_mpo.jl")
 include("func_dmrg.jl")
-
+include("chess_operator.jl")
 s=16
 D= 20
-N = 4
+N = 21
 
 A = randmps(N, s, D);
 
 
 #M =  mpoqlm(N ; coupling=1.  );
 #M =  mpoqlm_fixed_boundary_contitions(N ; coupling=1.  );
-M =  mpoqlm_fixed_with_interaction(N ; coupling=-0.0  );
+M =  mpoqlm_fixed_with_interaction(N ; coupling=0.0  );
 
 
 E, A, F = dmrgconvergence!(A, M ; verbose = true);
@@ -31,30 +31,24 @@ u = [1. 0.; 0. 1.]
 pp = [1. 0.; 0. 0.]
 pm = [0. 0.; 0. 1.]
 
-O=kron(kron(kron(sz,sz),u),u)
+O=kron(kron(kron(u,u),sz),sz)
 
 winding_number=measure1siteoperator(A,O)
-
+winding_number= deleteat!(winding_number , N)
 println(winding_number)
 
 
 
 println(sum(winding_number) )
-"""
-I=ones(N)
-
-@tensor v = scalar(I[a]*winding_number[a])
-
-println(v-winding_number[N])
 
 
-O=kron(kron(kron(u,u),sz),u)
+chess_operator=chess_operator_down(N)
 
-winding_number=measure1siteoperator(A,O)
+down = measure_mpo!(A,chess_operator)
 
-println(winding_number)
-
-@tensor v = scalar(I[a]*winding_number[a])
-
+<<<<<<< HEAD
 println(v-winding_number[N])
 """
+=======
+println(down)
+>>>>>>> a39e62167dcb6854e54bd822078f4eed97e9e945

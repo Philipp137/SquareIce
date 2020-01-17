@@ -1,0 +1,93 @@
+\documentclass[12pt, a4paper, twoside, titlepage]{article}
+\usepackage{amsmath,mathtools}
+\usepackage{bbold}
+\usepackage{mathabx}
+\newcommand{\ket}[1]{\ensuremath{\left|#1\right\rangle}}
+\newcommand{\bra}[1]{\ensuremath{\left\langle#1\right|}}
+
+\title{Hamiltonian of QLM as a spin system }
+\author{Paolo Stornati \\
+	DESY  Zeuthen \\
+	}
+
+
+\date{\today} 
+% \date{\today} date coulde be today 
+% \date{25.12.00} or be a certain date
+% \date{ } or there is no date 
+\begin{document}
+% Hint: \title{what ever}, \author{who care} and \date{when ever} could stand 
+% before or after the \begin{document} command 
+% BUT the \maketitle command MUST come AFTER the \begin{document} command! 
+%\maketitle
+
+%\tableofcontents % create a table of contens 
+
+%\newpage
+
+
+\section{Hamiltonian of QLM as a spin system}
+
+We define the Square Ice Hamiltonian
+
+\begin{equation}
+  \label{eq:Ham1}
+    H = \sum_\square (-f_\square + \lambda f^2_\square)\,,\label{eq:hamiltonian}
+\end{equation}
+where we some over all plaquettes. The plaquette operator is defined as:
+\begin{equation}\label{eq:plaquette}
+       f_\square = \sigma^+_{\mu_1}\sigma^+_{\mu_2}\sigma^-_{\mu_3}\sigma^-_{\mu_4}\, +  \sigma^-_{\mu_1}\sigma^-_{\mu_2}\sigma^+_{\mu_3}\sigma^+_{\mu_4}
+\end{equation}
+
+\begin{align}
+	f^2_\square= \sigma^+_{\mu_1} \sigma^-_{\mu_1} \, \sigma^+_{\mu_2} \sigma^-_{\mu_2} \, \sigma^-_{\mu_3} \sigma^+_{\mu_3} \, \sigma^-_{\mu_4} \sigma^+_{\mu_4}  \, + hc
+\end{align}
+
+If we define $p+$ and $p+$ as:
+\begin{align}
+	p+= \frac{ \mathbb{1} + \sigma^z }{2} \; ;	\; p-= \frac{ \mathbb{1} - \sigma^z }{2}
+\end{align}
+
+I have:
+
+\begin{equation}\label{eq:plaquette}
+	f^2_\square = p^+_{\mu_1}p^+_{\mu_2} p^-_{\mu_3} p^-_{\mu_4}\, +  p^-_{\mu_1} p^-_{\mu_2} p^+_{\mu_3} p^+_{\mu_4}
+\end{equation}
+
+\subsection{Todos}
+\begin{itemize}
+  \item Hamiltonian in external magnetic field, $\phi_\square\in \mathbb{R}$. 
+    Therefore we define the generalized plaquette operator
+    \begin{align}
+      f(\phi_\square) \coloneqq u_\square e^{i\phi_\square}+ u^\dagger_\square e^{-i\phi_\square}
+    \end{align}
+    and plug it in \eqref{eq:Ham1}
+    \begin{align}
+      H =J \sum_{\square} ( - u_\square e^{\i \phi_\square} + u^\dagger_\square e^{-\i \phi_\square}) + \lambda \sum_\square (u_\square e^{i\phi_square}
+    \end{align}
+\end{itemize}
+
+
+%\end{thebibliography}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
