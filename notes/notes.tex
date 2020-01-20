@@ -1,5 +1,5 @@
 \documentclass[12pt, a4paper, twoside, titlepage]{article}
-\usepackage{amsmath}
+\usepackage{amsmath,mathtools}
 \usepackage{bbold}
 \usepackage{mathabx}
 \newcommand{\ket}[1]{\ensuremath{\left|#1\right\rangle}}
@@ -31,6 +31,7 @@
 We define the Square Ice Hamiltonian
 
 \begin{equation}
+  \label{eq:Ham1}
     H = \sum_\square (-f_\square + \lambda f^2_\square)\,,\label{eq:hamiltonian}
 \end{equation}
 where we some over all plaquettes. The plaquette operator is defined as:
@@ -53,6 +54,18 @@ I have:
 	f^2_\square = p^+_{\mu_1}p^+_{\mu_2} p^-_{\mu_3} p^-_{\mu_4}\, +  p^-_{\mu_1} p^-_{\mu_2} p^+_{\mu_3} p^+_{\mu_4}
 \end{equation}
 
+\subsection{Todos}
+\begin{itemize}
+  \item Hamiltonian in external magnetic field, $\phi_\square\in \mathbb{R}$. 
+    Therefore we define the generalized plaquette operator
+    \begin{align}
+      f(\phi_\square) \coloneqq u_\square e^{i\phi_\square}+ u^\dagger_\square e^{-i\phi_\square}
+    \end{align}
+    and plug it in \eqref{eq:Ham1}
+    \begin{align}
+      H =J \sum_{\square} ( - u_\square e^{\i \phi_\square} + u^\dagger_\square e^{-\i \phi_\square}) + \lambda \sum_\square (u_\square e^{i\phi_square}
+    \end{align}
+\end{itemize}
 
 
 %\end{thebibliography}
