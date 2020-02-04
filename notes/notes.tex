@@ -1,21 +1,37 @@
 \documentclass[12pt, a4paper, twoside, titlepage]{article}
+\usepackage[left=3cm, right=3cm, top=2cm]{geometry}
 \usepackage{amsmath,mathtools}
 \usepackage{bbold}
+\usepackage{parskip}
 \usepackage{mathabx}
+\usepackage{cleveref} %% use \cref instead of \ref or \eqref
+
+% TIKZ Packages
+\usepackage{tikz}
+\usepackage{ifthen}
+\usetikzlibrary{calc}
+\usepackage{xcolor}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.markings}
+
+
 \newcommand{\ket}[1]{\ensuremath{\left|#1\right\rangle}}
 \newcommand{\bra}[1]{\ensuremath{\left\langle#1\right|}}
+\begin{document}
+\noindent \Large {\textbf{Tensor Study of Quantum Link Model}}
+\normalsize
+\\[2ex]
+P. Stornati, P. Krah, D. Banerjee
+\\[1ex]
+Date: \today
+\\[1ex]
+\hrule$~$
+  \\[2ex]
 
-\title{Hamiltonian of QLM as a spin system }
-\author{Paolo Stornati \\
-	DESY  Zeuthen \\
-	}
 
-
-\date{\today} 
 % \date{\today} date coulde be today 
 % \date{25.12.00} or be a certain date
 % \date{ } or there is no date 
-\begin{document}
 % Hint: \title{what ever}, \author{who care} and \date{when ever} could stand 
 % before or after the \begin{document} command 
 % BUT the \maketitle command MUST come AFTER the \begin{document} command! 
@@ -28,16 +44,112 @@
 
 \section{Hamiltonian of QLM as a spin system}
 
-We define the Square Ice Hamiltonian
-
+We want to study the Square Ice Hamiltonian
 \begin{equation}
-  \label{eq:Ham1}
     H = \sum_\square (-f_\square + \lambda f^2_\square)\,,\label{eq:hamiltonian}
 \end{equation}
-where we some over all plaquettes. The plaquette operator is defined as:
+as the sum over all plaquettes:
 \begin{equation}\label{eq:plaquette}
-       f_\square = \sigma^+_{\mu_1}\sigma^+_{\mu_2}\sigma^-_{\mu_3}\sigma^-_{\mu_4}\, +  \sigma^-_{\mu_1}\sigma^-_{\mu_2}\sigma^+_{\mu_3}\sigma^+_{\mu_4}
+       f_\square = \sigma^+_{\mu_1}\sigma^+_{\mu_2}\sigma^-_{\mu_3}\sigma^-_{\mu_4}\, +  \sigma^-_{\mu_1}\sigma^-_{\mu_2}\sigma^+_{\mu_3}\sigma^+_{\mu_4}.
 \end{equation}
+on a long cylindrical lattice 
+\begin{align}\label{eq:geometry}
+\Omega=\{\mu = (n,m) |\, n\in\{1,\dots,L_x\}, \;  m \in\{1,\dots L_y\}\}
+\end{align}
+displayed in \cref{fig:lattice}.
+\begin{figure}[hp!]
+  \input{QLM_tikz.tex}
+  \caption{Definition of the computational mesh}
+  \label{fig:lattice}
+\end{figure}
+
+In all our lattices $L_y \ll L_x$. For now we fix $L_y = 2$.
+under the \textit{Gauss law constraint}:
+\begin{align}\label{eq:ice_rule}
+  G_\mu&=0 \qquad\text{ for all }\qquad \mu \in \Omega\,,\\
+  G_\mu &\coloneqq \sum_{\hat{i}\in\{\hat{x},\hat{y}\}} ( \sigma_{\nu-\hat{i}/2}-\sigma_{\nu+\hat{i}/2})\,.
+\end{align}
+Here $G_\mu$ counts the difference between in and outgoing arrows at vertex $\mu$.
+
+In the conventional up/down ([1 0]/[0 1]) basis the  plaquette-operators 
+$\sigma^{\pm}$ are given by:
+\begin{align}
+\sigma^+=
+\begin{pmatrix}
+0 & 1 \\
+0 & 0
+\end{pmatrix}
+\quad
+\sigma^-=
+\begin{pmatrix}
+0 & 0 \\
+1 & 0
+\end{pmatrix}
+\qquad
+I_2 =
+\begin{pmatrix}
+1 & 0 \\
+0 & 1
+\end{pmatrix}
+\end{align}
+To identify the different local interaction terms in the Hamilton operator  \eqref{eq:Hloc} with \eqref{eq:hamiltonian} we rewrite the
+plaquette-operator into our computational basis $|i_n\rangle$. A plaquette operator defines our nearest neighbor interaction between state
+$|i_n\rangle$ and $|i_{n+1}\rangle$
+\begin{align}
+f_\square &= f_{\sqsubset,n,m}\otimes f_{\sqsupset,n,m} + h.c.\\
+f_{\sqsubset,n,m} &= \sigma^-_{r,n,m+1}\sigma^-_{v,n,m+1}\sigma^+_{r,n,m}\\
+f_{\sqsupset,n+1,m} &= \sigma^+_{l,n+1,m+1}\sigma^+_{v,n+1,m+1}\sigma^-_{l,n+1,m}
+\end{align}
+Comparing this to \eqref{eq:Hloc} yields:
+\begin{align}
+h^{(1)}_{\sqsubset,n,m} &=- f_{\sqsubset,n,m}\quad
+&h^{(1)}_{\sqsupset,n+1,m} = f_{\sqsupset,n+1,m}\\
+%%%%
+h^{(2)}_{\sqsubset,n,m} &=- f^\dagger_{\sqsubset,n,m}
+\quad
+&h^{(2)}_{\sqsupset,n+1,m} = f^\dagger_{\sqsupset,n+1,m}\\
+%%%%
+h^{(3)}_{\sqsubset,n,m} &=\lambda f^\dagger_{\sqsubset,n,m}f_{\sqsubset,n,m}
+\quad
+&h^{(3)}_{\sqsupset,n+1,m} = f^\dagger_{\sqsupset,n+1,m}f_{\sqsupset,n+1,m}\\
+%%%%
+h^{(4)}_{\sqsubset,n,m} &=
+\lambda f_{\sqsubset,n,m}f^\dagger_{\sqsubset,n,m}
+\quad
+&h^{(4)}_{\sqsupset,n+1,m} =
+f_{\sqsupset,n+1,m}f^\dagger_{\sqsupset,n+1,m}\\
+\end{align}
+
+For example in our $L_y=2$ system we get $64 \times 64$ size Operators :
+
+\begin{align}
+h^{(1)}_{\sqsubset,n,m} &=-\sigma^+\otimes\sigma^-\otimes\sigma^+\otimes I_2 \otimes I_2 \otimes I_2 \in \mathbb{R}^{2^6,2^6}\\
+h^{(1)}_{\sqsupset,n,m} &=I_2 \otimes I_2 \otimes \sigma^+ \otimes I_2\otimes\sigma^-\otimes\sigma^+ \in \mathbb{R}^{2^6,2^6}\\
+\end{align}
+Note that this allready inherits the periodicity in $\hat{y}$. For the choosen up/down ([1 0]/[0 1]) basis the link operators are given by:
+\begin{align}
+\sigma^+=
+\begin{pmatrix}
+0 & 1 \\
+0 & 0
+\end{pmatrix}
+\quad
+\sigma^-=
+\begin{pmatrix}
+0 & 0 \\
+1 & 0
+\end{pmatrix}
+\qquad
+I_2 =
+\begin{pmatrix}
+1 & 0 \\
+0 & 1
+\end{pmatrix}
+\end{align}
+
+
+
+
 
 \begin{align}
 	f^2_\square= \sigma^+_{\mu_1} \sigma^-_{\mu_1} \, \sigma^+_{\mu_2} \sigma^-_{\mu_2} \, \sigma^-_{\mu_3} \sigma^+_{\mu_3} \, \sigma^-_{\mu_4} \sigma^+_{\mu_4}  \, + hc
@@ -61,9 +173,10 @@ I have:
     \begin{align}
       f(\phi_\square) \coloneqq u_\square e^{i\phi_\square}+ u^\dagger_\square e^{-i\phi_\square}
     \end{align}
-    and plug it in \eqref{eq:Ham1}
+    and plug it in \eqref{eq:hamiltonian}
+  \item Winding number operators
     \begin{align}
-      H =J \sum_{\square} ( - u_\square e^{\i \phi_\square} + u^\dagger_\square e^{-\i \phi_\square}) + \lambda \sum_\square (u_\square e^{i\phi_square}
+      W_y = 
     \end{align}
 \end{itemize}
 
