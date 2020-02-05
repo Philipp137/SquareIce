@@ -14,7 +14,8 @@
 \usetikzlibrary{decorations.pathmorphing}
 \usetikzlibrary{decorations.markings}
 
-
+%% physics 
+\renewcommand{\H}{\ensuremath{\mathcal{H}}}
 \newcommand{\ket}[1]{\ensuremath{\left|#1\right\rangle}}
 \newcommand{\bra}[1]{\ensuremath{\left\langle#1\right|}}
 \begin{document}
@@ -46,7 +47,7 @@ Date: \today
 
 We want to study the Square Ice Hamiltonian
 \begin{equation}
-    H = \sum_\square (-f_\square + \lambda f^2_\square)\,,\label{eq:hamiltonian}
+    \H = \sum_\square (-f_\square + \lambda f^2_\square)\,,\label{eq:hamiltonian}
 \end{equation}
 as the sum over all plaquettes:
 \begin{equation}\label{eq:plaquette}
@@ -63,16 +64,8 @@ displayed in \cref{fig:lattice}.
   \label{fig:lattice}
 \end{figure}
 
-In all our lattices $L_y \ll L_x$. For now we fix $L_y = 2$.
-under the \textit{Gauss law constraint}:
-\begin{align}\label{eq:ice_rule}
-  G_\mu&=0 \qquad\text{ for all }\qquad \mu \in \Omega\,,\\
-  G_\mu &\coloneqq \sum_{\hat{i}\in\{\hat{x},\hat{y}\}} ( \sigma_{\nu-\hat{i}/2}-\sigma_{\nu+\hat{i}/2})\,.
-\end{align}
-Here $G_\mu$ counts the difference between in and outgoing arrows at vertex $\mu$.
-
-In the conventional up/down ([1 0]/[0 1]) basis the  plaquette-operators 
-$\sigma^{\pm}$ are given by:
+In the conventional up/down $s^\pm\in\mathbb{R}^2$ ([1 0]/[0 1]) basis the  link operators 
+$\sigma^{\pm}$ are pauli matrices :
 \begin{align}
 \sigma^+=
 \begin{pmatrix}
@@ -92,6 +85,115 @@ I_2 =
 0 & 1
 \end{pmatrix}
 \end{align}
+
+
+In all our lattices $L_y \ll L_x$. For now we fix $L_y = 2$ as in \cref{fig:lattice}.
+Before explaining the computations we want to point out some properties of the Hamiltonian.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mathematical Properties of the Quantum Link Model}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Gauss Law:}
+The Hamiltonian \H\, in \cref{eq:hamiltonian} 
+commutes with the \textit{vertex operator} $G_\mu$, which counts the number of in and
+outgoing arrows at vertex $\mu$. We can therefore fix the total charge at each vertex
+with the \textit{Gauss law constraint}:
+\begin{align}\label{eq:ice_rule}
+  G_\mu&=0 \qquad\text{ for all }\qquad \mu \in \Omega\,,\\
+  G_\mu &\coloneqq \sum_{\hat{i}\in\{\hat{x},\hat{y}\}} ( s_{\nu-\hat{i}/2}-s_{\nu+\hat{i}/2})\,.
+\end{align}
+\paragraph{Winding Numbers}
+
+\paragraph{Fluxes}
+\subsection{Hilbert-Space}
+In the absence of the ice rule eq.\eqref{eq:ice_rule} the hilbertspace becomes $2^{2\cdot L_xL_y}$ dimensional  and the linear combination of every state is given by:
+\begin{equation}\label{eq:hilbertspace}
+|\psi\rangle = \sum_{i_1,i_2,\dots,i_{L_x}}A_{i_1,i_2,\dots,i_{L_x}} \,|i_1\rangle|i_2\rangle\dots|i_{L_x}\rangle
+\end{equation}
+where $i_n=1,2,\dots,2^{2L_y}$ labels the corresponding quantum state at site $n$. For the $L_y=2$
+we thus have 16 different quantum states at each site $|i_n\rangle=|(s_1,s_2,s_3,s_4)\rangle$,
+where $s_i\in\{0,1\}$ labels the $i$th spin in the local basis drawn in \cref{fig:locbasis}.
+The 16 different combinations in the set can be explicitly written down:
+\begin{equation}
+  %
+  \left \{ 
+  \begin{pmatrix}
+  1  \\
+  1 \\
+  1 \\
+  1 \\
+  \end{pmatrix},
+  %
+  %
+  \begin{pmatrix}
+  1  \\
+  0 \\
+  1 \\
+  1 \\
+  \end{pmatrix},
+  %
+  %
+  \begin{pmatrix}
+  1  \\
+  1 \\
+  0 \\
+  1 \\
+  \end{pmatrix},
+%
+  \begin{pmatrix}
+  1  \\
+  1 \\
+  1 \\
+  0 \\
+  \end{pmatrix},
+  %
+%
+  \begin{pmatrix}
+  0  \\
+  0 \\
+  1 \\
+  1 \\
+  \end{pmatrix},
+ %
+  \cdots,
+  \begin{pmatrix}
+  0  \\
+  0 \\
+  0 \\
+  1 \\
+  \end{pmatrix},
+  %%
+  \begin{pmatrix}
+  0  \\
+  0 \\
+  0 \\
+  0 \\
+  \end{pmatrix}
+  % %
+  \right\}
+  %
+\end{equation}
+The number of elements in the set will be also referred to as local hilbertspace dimension $D$.
+
+\newpage
+\section{Computational Basis}
+For the MPS we have to rewrite the Hamiltonian of the system in the nearest neighbour setting.
+The local Hamiltonian $H_{n,n+1}$ thus defines the interaction between the states at site
+$|i_n\rangle$ and $|i_{n+1}\rangle$.
+The Hamilton operator \eqref{eq:hamiltonian} consists of 4 terms. 
+Where on each site we have $m=1,\dots,L_y$ possible interactions. 
+Thus the hamiltonian consists of $4L_y$ Kronecker products:
+\begin{align}
+H_{n,n+1}= \sum_{j=1}^4\sum_{m=1}^{L_y}h^{(j)}_{\sqsubset,n,m} \otimes h^{(j)}_{\sqsupset,n+1,m}\label{eq:Hloc}
+\end{align}
+
+\begin{figure}[hp!]
+  \centering
+  \input{local_basis_tikz.tex}
+  \caption{Definition of the computational mesh}
+  \label{fig:locbasis}
+\end{figure}
+
 To identify the different local interaction terms in the Hamilton operator  \eqref{eq:Hloc} with \eqref{eq:hamiltonian} we rewrite the
 plaquette-operator into our computational basis $|i_n\rangle$. A plaquette operator defines our nearest neighbor interaction between state
 $|i_n\rangle$ and $|i_{n+1}\rangle$
