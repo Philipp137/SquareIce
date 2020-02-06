@@ -314,7 +314,7 @@ function mpoqlm_with_interaction_chemical_potential_and_magneti_field(N::Int;   
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
     phi=exp(im*theta)
-    
+    phi_star=exp(-1*im*theta)
     sp=promtocompl(sp) ;    sm= promtocompl(sm) ;  sz=   promtocompl(sz) ;   u=  promtocompl(u) ;   pp=  promtocompl(pp)  ; pm= promtocompl(pm) ;   
 
     s=16
@@ -334,9 +334,9 @@ function mpoqlm_with_interaction_chemical_potential_and_magneti_field(N::Int;   
     MN = convert(Array{Complex{Float64},4},MN)
     
 
-    operator_1=-1*kron(kron(kron(sm,u),sm),sp)
+    operator_1=-1*phi*kron(kron(kron(sm,u),sm),sp)
     operator_2=kron(kron(kron(sp,u),u),u)
-    operator_3=-1*kron(kron(kron(u,sm),sp),sm)
+    operator_3=-1*phi*kron(kron(kron(u,sm),sp),sm)
     operator_4=kron(kron(kron(u,sp),u),u)
 
     operator_5=coupling*kron(kron(kron(pm,u),pm),pp)
@@ -346,10 +346,10 @@ function mpoqlm_with_interaction_chemical_potential_and_magneti_field(N::Int;   
     operator_8=kron(kron(kron(u,pp),u),u)
     
 
-    operator_1_dag=-1*kron(kron(kron(sp,u),sp),sm)    
+    operator_1_dag=-1*phi_star*kron(kron(kron(sp,u),sp),sm)    
     operator_2_dag=kron(kron(kron(sm,u),u),u)
     
-    operator_3_dag=-1*kron(kron(kron(u,sp),sm),sp)
+    operator_3_dag=-1*phi_star*kron(kron(kron(u,sp),sm),sp)
     operator_4_dag=kron(kron(kron(u,sm),u),u)
 
     operator_5_dag=coupling*kron(kron(kron(pp,u),pp),pm)
