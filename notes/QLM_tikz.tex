@@ -56,7 +56,9 @@
         \draw[actcol, decorate, decoration=zigzag] (-1, 1) -- (-0.2,1) node [pos=0.66,below] {};
         \draw[-] (-1, 1) -- (-0.2,1) node [pos=0.66,below] {};
         \draw[actcol, decorate, decoration=zigzag] (7, 1) -- (8,1) node [pos=0.66,below] {};
-        \draw[actcol, decorate, decoration=zigzag] (7, 0) -- (8,0) node [pos=0.66,below] {};
+      \draw[actcol, decorate, decoration=zigzag] (7, 0) -- (8,0) node [pos=0.66,below] {};
+        \draw[actcol, decorate, decoration=zigzag] (7, 2) -- (8,2) node [pos=0.66,below] {};
+        \draw[actcol, decorate, decoration=zigzag] (-1, 2) -- (-0.2,2) node [pos=0.66,below] {};
         \draw[dashed] (-1, 2) -- (-0.2,2) node [pos=0.66,below] {};
 
         \newcounter{ga}\setcounter{ga}{0}
@@ -67,17 +69,18 @@
 	        	  \ifthenelse{\x<8 \AND \y<2}
                          {
                           \stepcounter{ga}
-                        \draw[-] (\x,\y ) -- (\x+0.9,\y) node [pos=0.5,below] {$\sigma_{\thega}$};
+                        \draw[-] (\x,\y ) -- (\x+0.9,\y) node [pos=0.5,below] {$s_{\thega}$};
                           \stepcounter{ga}
-                          \draw[-] (\x,\y ) -- (\x,\y+0.9) node [pos=0.5,left] {$\sigma_{\thega}$};
+                          \draw[-] (\x,\y ) -- (\x,\y+0.9) node [pos=0.5,left] {$s_{\thega}$};
+                          \fill (\x,\y)  circle[radius=1.5pt] node [anchor=south west] {(\x,\y)};
 	         	}{
                             \draw[dashed] (\x,\y ) -- (\x,\y+0.9) node [pos=0.66,below] {};
                             \draw[dashed] (\x,\y ) -- (\x+0.9,\y) node [pos=0.66,below] {};
+                            \fill[black!40] (\x,\y)  circle[radius=1.5pt] node {};
                           }
 				
 				
                           %\fill (\x+0.5,\y+0.5)  circle[radius=1.5pt] node [anchor=south west] {(\x,\y)};
-                          \fill (\x,\y)  circle[radius=1.5pt] node [anchor=south west] {(\x,\y)};
 					
 
 				
