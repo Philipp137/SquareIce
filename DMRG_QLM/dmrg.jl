@@ -10,18 +10,22 @@ s=16
 D= 20
 N = 9
 
-A = randmps(N, s, D);
+#A = randmps(N, s, D);
+A = randmps(N, s, D, Complex{Float64});
 coupling_interaction=-2.0
 chemical_potential=0.0
+theta=1.
 
 #M =  mpoqlm(N ; coupling=1.  );
 #M =  mpoqlm_fixed_boundary_contitions(N ; coupling=1.  );
 #M =  mpoqlm_fixed_with_interaction(N ; coupling=coupling_interaction  );
 #M =  mpoqlm_with_interaction_and_chemical_potential(N ; coupling=coupling_interaction  , mu=chemical_potential=1.);
-M =  mpoqlm_with_interaction_and_chemical_potential(N ; coupling=coupling_interaction , mu=chemical_potential);
+#M =  mpoqlm_with_interaction_and_chemical_potential(N ; coupling=coupling_interaction , mu=chemical_potential);
+M =  mpoqlm_with_interaction_chemical_potential_and_magneti_field(N ; coupling=coupling_interaction , mu=chemical_potential, theta=theta);
 
 
-E, A, F = dmrgconvergence!(A, M ; verbose = true);
+
+E, A, F = dmrgconvergence!(A, M ; verbose = true);mpoqlm_with_interaction_chemical_potential_and_magneti_field
 
 N=N-1
 #println("$N  $D    $E  $coupling_interaction ")
@@ -36,8 +40,8 @@ pm = [0. 0.; 0. 1.]
 
 O=kron(kron(kron(u,u),sz),sz)
 
-winding_number=measure1siteoperator(A,O)
-winding_number= deleteat!(winding_number , N)
+#winding_number=measure1siteoperator(A,O)
+#winding_number= deleteat!(winding_number , N)
 #println(winding_number)
 
 
@@ -52,7 +56,7 @@ chess_up=chess_operator_up(N)
 down = measure_mpo!(A,chess_down)
 
 up = measure_mpo!(A,chess_up)
-
+println(E)
 
 #println("Number_of_Plaquettes $N coupling_interaction $coupling_interaction Bond_dimention $D  Energy_GS  $E winding_number $(sum(winding_number)) chess_down $down chess_up $up ")
-println("$(N-1)                   $coupling_interaction                 $D                 $E     $(sum(winding_number))      $down     $up ")
+#println("$(N-1)                   $coupling_interaction                 $D                 $E     $(sum(winding_number))      $down     $up ")
