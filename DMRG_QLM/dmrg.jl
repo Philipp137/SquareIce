@@ -51,14 +51,5 @@ down = measure_mpo!(A,chess_down)
 up = measure_mpo!(A,chess_up)
 
 
-<<<<<<< HEAD
 #println("Number_of_Plaquettes $N coupling_interaction $coupling_interaction Bond_dimention $D  Energy_GS  $E winding_number $(sum(winding_number)) chess_down $down chess_up $up ")
 println("$N                   $coupling_interaction                 $D                 $E     $(sum(winding_number))      $down     $up ")
-=======
-<<<<<<< HEAD
-println(v-winding_number[N])
-"""
-=======
-println(down)
->>>>>>> a39e62167dcb6854e54bd822078f4eed97e9e945
->>>>>>> 19f7d5b0b51329bbad2d9c707875cd8bb8f2c411
