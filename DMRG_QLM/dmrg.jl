@@ -13,8 +13,8 @@ N = 9
 #A = randmps(N, s, D);
 A = randmps(N, s, D, Complex{Float64});
 coupling_interaction=-2.0
-chemical_potential=0.0
-theta=1.
+chemical_potential=1.0
+theta=0.
 
 #M =  mpoqlm(N ; coupling=1.  );
 #M =  mpoqlm_fixed_boundary_contitions(N ; coupling=1.  );
@@ -25,7 +25,8 @@ M =  mpoqlm_with_interaction_chemical_potential_and_magneti_field(N ; coupling=c
 
 
 
-E, A, F = dmrgconvergence!(A, M ; verbose = true);mpoqlm_with_interaction_chemical_potential_and_magneti_field
+E, A, F = dmrgconvergence!(A, M ; verbose = true);
+
 
 N=N-1
 #println("$N  $D    $E  $coupling_interaction ")
