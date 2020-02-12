@@ -99,7 +99,18 @@ function dmrg1sweep!(A, H, F = nothing; verbose = true, kwargs...)
 end
 
 
-function dmrgconvergence!(A, M ;  verbose = true, kwargs...)
+function dmrgconvergence!(A, M , F = nothing ;  verbose = true, kwargs...)
+    N = length(A)
+    
+    if F == nothing
+        F = Vector{Any}(undef, N+2)
+        F[1] = fill!(similar(M[1], (1,1,1)), 1)
+        F[N+2] = fill!(similar(M[1], (1,1,1)), 1)
+        for k = N:-1:1
+            F[k+1] = updaterightenv(A[k], M[k], F[k+2])
+        end
+    end
+
     max_sweep=1000000
     conv = 1.0e-8
     E = Vector{Float64}(undef, max_sweep)
@@ -150,3 +161,36 @@ function measure_mpo!(A, M )
     return E 
     end
 
+
+
+function dmrgconvergence_in_D!(A, M , F = nothing ;  verbose = true, kwargs...)
+    N = length(A)
+    
+    if F == nothing
+        F = Vector{Any}(undef, N+2)
+        F[1] = fill!(similar(M[1], (1,1,1)), 1)
+        F[N+2] = fill!(similar(M[1], (1,1,1)), 1)
+        for k = N:-1:1
+            F[k+1] = updaterightenv(A[k], M[k], F[k+2])
+        end
+    end
+
+    max_sweep=1000000
+    conv = 1.0e-8
+    E = Vector{Float64}(undef, max_sweep)
+    counter=2
+    E[1], A,  F = dmrg1sweep!( A, M; verbose = false);
+#    println("1")
+#    println(E[1])
+    E[2]=1.
+
+    while  abs(E[counter]-E[counter-1]) > conv
+        counter+=1
+        E[counter], A, F = dmrg1sweep!(A, M, F; verbose = false);    
+#        println(counter-1)
+#        println(E[counter])
+    end
+    X=E[counter]
+    return X , A, F
+end
+    
