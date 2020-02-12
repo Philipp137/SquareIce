@@ -40,6 +40,15 @@ function applyH1(AC, FL, FR, M)
     @tensor HAC[α,s,β] := FL[α,a,α']*AC[α',s',β']*M[a,s,b,s']*FR[β',b,β]
 end
 
+function applyH2(AAC, FL, FR, M1, M2)
+    @tensor HAAC[α,s1,s2,β] := FL[α,a,α']*AAC[α',s1',s2',β']*M1[a,s1,b,s1']*M2[b,s2,c,s2']*FR[β',c,β]
+end
+
+function svdtrunc(A; truncdim = max(size(A)...), truncerr = 0.)
+    F = svd(A)
+    d = min(truncdim, count(F.S .>= truncerr))
+    return F.U[:,1:d], diagm(0=>F.S[1:d]), F.Vt[1:d, :]
+end
 
 function updateleftenv(A, M, FL)
     @tensor FL[α,a,β] := FL[α',a',β']*A[β',s',β]*M[a',s,a,s']*conj(A[α',s,α])
@@ -97,6 +106,69 @@ function dmrg1sweep!(A, H, F = nothing; verbose = true, kwargs...)
     A[1] = AC
     return E, A, F
 end
+
+
+
+function dmrg2sweep!(A, M, F = nothing; verbose = true, truncdim = 200, truncerr = 1e-6, kwargs...)
+    N = length(A)
+
+    if F == nothing
+        F = Vector{Any}(undef, N+2)
+        F[1] = fill!(similar(M[1], (1,1,1)), 1)
+        F[N+2] = fill!(similar(M[1], (1,1,1)), 1)
+        for k = N:-1:1
+            F[k+1] = updaterightenv(A[k], M[k], F[k+2])
+        end
+    end
+
+    AC = A[1]
+    for k = 1:N-2
+        @tensor AAC[-1,-2,-3,-4] := AC[-1,-2,1]*A[k+1][1,-3,-4]
+        Es, AACs, info = eigsolve(x->applyH2(x, F[k], F[k+3], M[k], M[k+1]), AAC, 1, :SR; ishermitian = true, kwargs...)
+        AAC = AACs[1]
+        E = Es[1]
+
+        verbose && println("Sweep L2R: site $(k:k+1) -> energy $E")
+
+        AL, S, V = svdtrunc(reshape(AAC, size(AAC,1)*size(AAC,2), :); truncdim = truncdim, truncerr = truncerr)
+        A[k] = reshape(AL, size(AC, 1), size(AC, 2), :)
+        F[k+1] = updateleftenv(A[k], M[k], F[k])
+
+        AC = reshape(S*V, size(S,1), size(A[k+1], 2), size(A[k+1], 3))
+    end
+
+    k = N-1
+    @tensor AAC[-1,-2,-3,-4] := AC[-1,-2,1]*A[k+1][1,-3,-4]
+    Es, AACs, info = eigsolve(x->applyH2(x, F[k], F[k+3], M[k], M[k+1]), AAC, 1, :SR; ishermitian = true, kwargs...)
+    AAC = AACs[1]
+    E = Es[1]
+    verbose && println("Sweep L2R: site $(k:k+1) -> energy $E")
+
+    for k = N-1:-1:2
+        U, S, AR = svdtrunc(reshape(AAC, size(AAC,1)*size(AAC,2), :); truncdim = truncdim, truncerr = truncerr)
+
+        A[k+1] = reshape(AR, size(AR, 1), size(AAC, 3), size(AAC, 4))
+        F[k+2] = updaterightenv(A[k+1], M[k+1], F[k+3])
+
+        AC = reshape(U*S, size(AAC,1), size(AAC,2), size(S,2))
+        @tensor AAC[:] := A[k-1][-1,-2,1] * AC[1,-3,-4]
+
+        Es, AACs, info = eigsolve(x->applyH2(x, F[k-1], F[k+2], M[k-1], M[k]), AAC, 1, :SR; ishermitian = true, kwargs...)
+        AAC = AACs[1]
+        E = Es[1]
+        verbose && println("Sweep R2L: site $(k-1:k) -> energy $E")
+    end
+    k = 1
+    U, S, AR = svdtrunc(reshape(AAC, size(AAC,1)*size(AAC,2), :); truncdim = truncdim, truncerr = truncerr)
+
+    A[k+1] = reshape(AR, size(AR, 1), size(AAC, 3), size(AAC, 4))
+    F[k+2] = updaterightenv(A[k+1], M[k+1], F[k+3])
+
+    AC = reshape(U*S, size(AAC,1), size(AAC,2), size(S,2))
+    A[1] = AC
+    return E, A, F
+end
+
 
 
 function dmrgconvergence!(A, M , F = nothing ;  verbose = true, kwargs...)
@@ -163,34 +235,34 @@ function measure_mpo!(A, M )
 
 
 
-function dmrgconvergence_in_D!(A, M , F = nothing ;  verbose = true, kwargs...)
+function dmrgconvergence_in_D!(D, D_max , A, M , F = nothing ;  verbose = true, kwargs...)
     N = length(A)
     
-    if F == nothing
-        F = Vector{Any}(undef, N+2)
-        F[1] = fill!(similar(M[1], (1,1,1)), 1)
-        F[N+2] = fill!(similar(M[1], (1,1,1)), 1)
-        for k = N:-1:1
-            F[k+1] = updaterightenv(A[k], M[k], F[k+2])
-        end
-    end
+    A = randmps(N, s, D);
 
-    max_sweep=1000000
+    max_sweep=100
     conv = 1.0e-8
     E = Vector{Float64}(undef, max_sweep)
     counter=2
-    E[1], A,  F = dmrg1sweep!( A, M; verbose = false);
-#    println("1")
-#    println(E[1])
-    E[2]=1.
+    E[2], A, F = dmrg1sweep!( A, M; verbose = false);
+    B=[]
+    G=[]
+#    push!(A,B)
+ #   push!(F,G)
 
-    while  abs(E[counter]-E[counter-1]) > conv
+   
+    E[1]=E[2]+1.
+    println("$N  $D    $(E[2])   ")
+    while  abs(E[counter]-E[counter-1]) > conv 
+        D=2*D
         counter+=1
-        E[counter], A, F = dmrg1sweep!(A, M, F; verbose = false);    
-#        println(counter-1)
-#        println(E[counter])
+        E[counter], A, F = dmrg2sweep!(A , M ; verbose = false, truncdim = D , truncerr = 1e-10 ) 
+        E[counter], A, F  = dmrgconvergence!(A, M , F  ; verbose = true);
+  #      push!(A,B)
+   #     push!(F,G)
+        println("$N  $D    $(E[counter])   ")
     end
-    X=E[counter]
-    return X , A, F
+    return E , A, F
+
 end
     
