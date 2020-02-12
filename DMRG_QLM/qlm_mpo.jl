@@ -361,7 +361,7 @@ function mpoqlm_with_interaction_chemical_potential_and_magneti_field(N::Int;   
     projector_N=kron(kron(kron(u,u),pp),pm)
 
 
-    M[1,:,D,:] = mu*(mu_1+mu_2+mu_3+mu_4)
+    M[1,:,D,:] = mu*(mu_3+mu_4)
 
     M[1,:,2,:] = operator_1
     M[2,:,D,:] = operator_2
