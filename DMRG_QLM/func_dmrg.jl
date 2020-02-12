@@ -248,7 +248,7 @@ function dmrgconvergence_in_D!(D, D_max , A, M , F = nothing ;  verbose = true, 
     B=[]
     G=[]
 #    push!(A,B)
- #   push!(F,G)
+#    push!(F,G)
 
    
     E[1]=E[2]+1.
@@ -258,11 +258,12 @@ function dmrgconvergence_in_D!(D, D_max , A, M , F = nothing ;  verbose = true, 
         counter+=1
         E[counter], A, F = dmrg2sweep!(A , M ; verbose = false, truncdim = D , truncerr = 1e-10 ) 
         E[counter], A, F  = dmrgconvergence!(A, M , F  ; verbose = true);
-  #      push!(A,B)
-   #     push!(F,G)
+#        push!(A,B)
+#        push!(F,G)
         println("$N  $D    $(E[counter])   ")
     end
     return E , A, F
+#    return E , B, G
 
 end
     
