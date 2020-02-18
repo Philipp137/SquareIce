@@ -1,0 +1,19 @@
+reset
+set xlabel "Bond D"
+set ylabel "Energy - Energy_min"
+set logscale y
+f(x) = a + b*x
+a=1. ; b= -1
+fit f(x) "extrapolation_in_bond_D_L_50_lam_0"  using 5:(log($6+55.99809490488977)) via a, b
+g(x)=exp(f(x))
+
+plot "extrapolation_in_bond_D_L_50_lam_0"  using 5:($6+55.99809490488977) notitle , \
+g(x)  notitle
+
+
+set terminal pdfcairo enhanced color notransparent
+set title "Convergence of Energy for Lx=50 , Lambda = 0. D_{max} = 320"
+set output 'plot_extrapolation_in_bond_D_L_50_lam_0.pdf'
+replot
+unset output
+unset terminal
