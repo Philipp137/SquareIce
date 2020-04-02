@@ -14,7 +14,7 @@
 \usetikzlibrary{decorations.pathmorphing}
 \usetikzlibrary{decorations.markings}
 
-%% physics 
+%% physics
 \renewcommand{\H}{\ensuremath{\mathcal{H}}}
 \newcommand{\ket}[1]{\ensuremath{\left|#1\right\rangle}}
 \newcommand{\bra}[1]{\ensuremath{\left\langle#1\right|}}
@@ -30,15 +30,15 @@ Date: \today
   \\[2ex]
 
 
-% \date{\today} date coulde be today 
+% \date{\today} date coulde be today
 % \date{25.12.00} or be a certain date
-% \date{ } or there is no date 
-% Hint: \title{what ever}, \author{who care} and \date{when ever} could stand 
-% before or after the \begin{document} command 
-% BUT the \maketitle command MUST come AFTER the \begin{document} command! 
+% \date{ } or there is no date
+% Hint: \title{what ever}, \author{who care} and \date{when ever} could stand
+% before or after the \begin{document} command
+% BUT the \maketitle command MUST come AFTER the \begin{document} command!
 %\maketitle
 
-%\tableofcontents % create a table of contens 
+%\tableofcontents % create a table of contens
 
 %\newpage
 
@@ -53,7 +53,7 @@ as the sum over all plaquettes:
 \begin{equation}\label{eq:plaquette}
        f_\square = \sigma^+_{\mu_1}\sigma^+_{\mu_2}\sigma^-_{\mu_3}\sigma^-_{\mu_4}\, +  \sigma^-_{\mu_1}\sigma^-_{\mu_2}\sigma^+_{\mu_3}\sigma^+_{\mu_4}.
 \end{equation}
-on a long cylindrical lattice 
+on a long cylindrical lattice
 \begin{align}\label{eq:geometry}
 \Omega=\{\mu = (n,m) |\, n\in\{1,\dots,L_x\}, \;  m \in\{1,\dots L_y\}\}
 \end{align}
@@ -64,7 +64,7 @@ displayed in \cref{fig:lattice}.
   \label{fig:lattice}
 \end{figure}
 
-In the conventional up/down $s^\pm\in\mathbb{R}^2$ ([1 0]/[0 1]) basis the  link operators 
+In the conventional up/down $s^\pm\in\mathbb{R}^2$ ([1 0]/[0 1]) basis the  link operators
 $\sigma^{\pm}$ are pauli matrices :
 \begin{align}
 \sigma^+=
@@ -94,7 +94,7 @@ Before explaining the computations we want to point out some properties of the H
 \subsection{Mathematical Properties of the Quantum Link Model}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \paragraph{Gauss Law:}
-The Hamiltonian \H\, in \cref{eq:hamiltonian} 
+The Hamiltonian \H\, in \cref{eq:hamiltonian}
 commutes with the \textit{vertex operator} $G_\mu$, which counts the number of in and
 outgoing arrows at vertex $\mu$. We can therefore fix the total charge at each vertex
 with the \textit{Gauss law constraint}:
@@ -103,7 +103,9 @@ with the \textit{Gauss law constraint}:
   G_\mu &\coloneqq \sum_{\hat{i}\in\{\hat{x},\hat{y}\}} ( s_{\nu-\hat{i}/2}-s_{\nu+\hat{i}/2})\,.
 \end{align}
 \paragraph{Winding Numbers}
-
+\begin{equation}
+  W_y = \frac{1}{2L_y}\sum_\mu E_{\mu,x}
+\end{equation}
 \paragraph{Fluxes}
 \subsection{Hilbert-Space}
 In the absence of the ice rule eq.\eqref{eq:ice_rule} the hilbertspace becomes $2^{2\cdot L_xL_y}$ dimensional  and the linear combination of every state is given by:
@@ -116,7 +118,7 @@ where $s_i\in\{0,1\}$ labels the $i$th spin in the local basis drawn in \cref{fi
 The 16 different combinations in the set can be explicitly written down:
 \begin{equation}
   %
-  \left \{ 
+  \left \{
   \begin{pmatrix}
   1  \\
   1 \\
@@ -180,8 +182,8 @@ The number of elements in the set will be also referred to as local hilbertspace
 For the MPS we have to rewrite the Hamiltonian of the system in the nearest neighbour setting.
 The local Hamiltonian $H_{n,n+1}$ thus defines the interaction between the states at site
 $|i_n\rangle$ and $|i_{n+1}\rangle$.
-The Hamilton operator \eqref{eq:hamiltonian} consists of 4 terms. 
-Where on each site we have $m=1,\dots,L_y$ possible interactions. 
+The Hamilton operator \eqref{eq:hamiltonian} consists of 4 terms.
+Where on each site we have $m=1,\dots,L_y$ possible interactions.
 Thus the hamiltonian consists of $4L_y$ Kronecker products:
 \begin{align}
 H_{n,n+1}= \sum_{j=1}^4\sum_{m=1}^{L_y}h^{(j)}_{\sqsubset,n,m} \otimes h^{(j)}_{\sqsupset,n+1,m}\label{eq:Hloc}
@@ -270,7 +272,7 @@ I have:
 
 \subsection{Todos}
 \begin{itemize}
-  \item Hamiltonian in external magnetic field, $\phi_\square\in \mathbb{R}$. 
+  \item Hamiltonian in external magnetic field, $\phi_\square\in \mathbb{R}$.
     Therefore we define the generalized plaquette operator
     \begin{align}
       f(\phi_\square) \coloneqq u_\square e^{i\phi_\square}+ u^\dagger_\square e^{-i\phi_\square}
@@ -278,7 +280,7 @@ I have:
     and plug it in \eqref{eq:hamiltonian}
   \item Winding number operators
     \begin{align}
-      W_y = 
+      W_y =
     \end{align}
 \end{itemize}
 
@@ -286,23 +288,3 @@ I have:
 %\end{thebibliography}
 
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
