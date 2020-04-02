@@ -48,7 +48,7 @@ function mpoqlm(N::Int;   coupling=1. )
     return mpo
 end
 
-function mpoqlm_fixed_boundary_contitions(N::Int;   coupling=1. )
+function    (N::Int;   coupling=1. )
     sp = [0. 1.; 0. 0.]
     sm = [0. 0.; 1. 0.]
     sz = [1. 0.; 0. -1.]
