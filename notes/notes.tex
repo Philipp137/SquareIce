@@ -18,6 +18,9 @@
 \renewcommand{\H}{\ensuremath{\mathcal{H}}}
 \newcommand{\ket}[1]{\ensuremath{\left|#1\right\rangle}}
 \newcommand{\bra}[1]{\ensuremath{\left\langle#1\right|}}
+\newcommand{\M}[1]{\ensuremath{\mathcal{M}_{\rm #1}}}
+\newcommand{\Pp}[1]{\ensuremath{\mathbb{P}^{+}_{#1}}}
+\newcommand{\Pm}[1]{\ensuremath{\mathbb{P}^{-}_{#1}}}
 \begin{document}
 \noindent \Large {\textbf{Tensor Study of Quantum Link Model}}
 \normalsize
@@ -283,6 +286,16 @@ I have:
       W_y =
     \end{align}
 \end{itemize}
+
+\section{Order Parameters}
+ To detect the phase transitions, we study the so-called sublattice 
+ magnetization $( \M{A}, \M{B})$ which are defined as follows:
+ \begin{align}
+	 \M{A}(x) &= \Pp{x,\mu} \Pp{x+\mu,\nu} \Pm{x+\nu,\mu} \Pm{x,\nu} - 
+          \Pm{x,\mu} \Pm{x+\mu,\nu} \Pp{x+\nu,\mu} \Pp{x,\nu} 
+ \end{align}
+ where $\Pp{x,\mu}$ and $\Pm{x,\mu}$ are the projection operators
+ on the spin components $S^z = \pm \frac{1}{2}$ respectively.
 
 
 %\end{thebibliography}
