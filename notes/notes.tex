@@ -5,7 +5,9 @@
 \usepackage{parskip}
 \usepackage{mathabx}
 \usepackage{cleveref} %% use \cref instead of \ref or \eqref
-
+%% Tabels
+\usepackage{siunitx,booktabs}
+\usepackage[table]{xcolor}
 % TIKZ Packages
 \usepackage{tikz}
 \usepackage{ifthen}
@@ -288,16 +290,45 @@ I have:
 \end{itemize}
 
 \section{Order Parameters}
- To detect the phase transitions, we study the so-called sublattice 
+ To detect the phase transitions, we study the so-called sublattice
  magnetization $( \M{A}, \M{B})$ which are defined as follows:
  \begin{align}
-	 \M{A}(x) &= \Pp{x,\mu} \Pp{x+\mu,\nu} \Pm{x+\nu,\mu} \Pm{x,\nu} - 
-          \Pm{x,\mu} \Pm{x+\mu,\nu} \Pp{x+\nu,\mu} \Pp{x,\nu} 
+	 \M{A}(x) &= \Pp{x,\mu} \Pp{x+\mu,\nu} \Pm{x+\nu,\mu} \Pm{x,\nu} -
+          \Pm{x,\mu} \Pm{x+\mu,\nu} \Pp{x+\nu,\mu} \Pp{x,\nu}
  \end{align}
  where $\Pp{x,\mu}$ and $\Pm{x,\mu}$ are the projection operators
  on the spin components $S^z = \pm \frac{1}{2}$ respectively.
 
 
 %\end{thebibliography}
+\newpage
+\section{Numerical Results and Simulation Parameters}
+
+\begin{table}[htp!]
+\centering
+\caption{Parameter sets for all Simulations}
+\smallskip
+\sisetup{table-format = 3.2}
+\begin{tabular}{l l l}
+\toprule
+Parameters & \multicolumn{1}{l}{Simulation 1} & \multicolumn{1}{l}{Simulation 2} \\
+\midrule
+\rowcolor[gray]{.9}
+Vertical grid size $L_x$ & {20,40,60,100,200} & 60\\
+Horizontal grid size $L_y$           & 2 & 2 \\
+\rowcolor[gray]{.9}
+Coupling $\lambda$ & $[-4.0,-3.5,-3.0,\dots,-1.0]$ & -1.0\\
+Magnetic field angle $\theta$       & 0 & $\theta_k =\frac{\pi}{4}k, k = 0,1,\dots,8$ \\
+\rowcolor[gray]{.9}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htp!]
+  \includegraphics{../DMRG_QLM/data/extrapolation_in_bond_D/L_50/plot_extrapolation_in_bond_D_L_50_lam_0.pdf}
+  \caption{Extrapolation of the bond dimension}
+  \label{}
+\end{figure}
+
 
 \end{document}

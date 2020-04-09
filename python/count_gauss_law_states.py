@@ -151,8 +151,8 @@ def gauss_law_is_satisfied(config,boundary_left,boundary_right,Lx,Ly):
     return True
 
 # %%
-Lx =2
-Ly = 2
+Lx =6
+Ly = 4
 boundary=[-1, 1,-1] # spins in vertical direction of boundary at ix = 0 and ix = Lx
 Nlinks = 2*Lx*Ly
 # %%

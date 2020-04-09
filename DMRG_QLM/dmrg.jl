@@ -21,11 +21,11 @@ theta=0.0
 #M =  mpoqlm_fixed_with_interaction(N ; coupling=coupling_interaction  );
 #M =  mpoqlm_with_interaction_and_chemical_potential(N ; coupling=coupling_interaction  , mu=chemical_potential=1.);
 #M =  mpoqlm_with_interaction_and_chemical_potential(N ; coupling=coupling_interaction , mu=chemical_potential);
-M =  mpoqlm_with_interaction_chemical_potential_and_magneti_field(N ; coupling=coupling_interaction , mu=chemical_potential, theta=theta);
+#M =  mpoqlm_with_interaction_chemical_potential_and_magneti_field(N ; coupling=coupling_interaction , mu=chemical_potential, theta=theta);
 
 
 
-E, A, F = dmrgconvergence!(A, M ; verbose = true);
+#E, A, F = dmrgconvergence!(A, M ; verbose = true);
 
 
 N=N-1
