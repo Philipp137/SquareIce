@@ -1,0 +1,22 @@
+ Files to submit jobs in the DESY cluster is given in this
+ directory. 
+
+ 1. Open the file "start.sh". This has a for loop which
+    loops over the lattice sizes for which the run is to
+    be submitted. It makes a separate directory for each
+    executable/parameter and copies all the relevant files
+    and executables inside the directory. 
+
+ 2. Inside the relevant directory, it replaces a dummy
+    parameter in the parameter file (called submitQ3) with
+    the relevant parameters (using 'sed' command).
+
+ 3. The relevant job file which submits the job is 
+    relabelled and used to launch the job using the qsub
+    command.
+
+ 4. The shell sleep a while and the launches the next job
+    with the next set of parameters.
+
+  Using a double for-loop you can also launch all the jobs
+ in one go.
