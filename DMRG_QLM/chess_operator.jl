@@ -66,7 +66,7 @@ function chess_operator_down(N::Int;   coupling=1. )
 
     for site = 2:N-1;
         if iseven(site)
-            push!(mpo, Meven[:,:,:,:])
+            push!(mpo, -1*Meven[:,:,:,:])
         else
             push!(mpo, Modd[:,:,:,:])  
         end
@@ -146,7 +146,7 @@ function chess_operator_up(N::Int;   coupling=1. )
 
     for site = 2:N-1;
         if iseven(site)
-            push!(mpo, Meven[:,:,:,:])
+            push!(mpo, -1*Meven[:,:,:,:])
         else
             push!(mpo, Modd[:,:,:,:])  
         end
