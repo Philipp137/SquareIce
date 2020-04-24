@@ -1,0 +1,27 @@
+#!/bin/bash
+#set job name:
+#SBATCH -J fss_tn
+#how many jobs
+#SBATCH -N  1
+#one process for each physical core:
+#SBATCH -c 1
+#queue:
+#SBATCH -p sandybridge
+#runtime
+#SBATCH -t 48:00:00
+#copy environment variables from submit environment:
+#SBATCH --get-user-env
+#send mail on all occasions:
+#SBATCH --mail-type=NONE
+#reroute output to file
+#SBATCH -o output_%j
+#SBATCH -e errors_%j
+
+#modules and variables
+module load gnu/5.4.0
+
+
+
+#executables
+
+ /lustre/fs23/group/nic/stornati/julia/julia /lustre/fs23/group/nic/stornati/big_fss/fss.jl  60  20 -4  >> scaling 

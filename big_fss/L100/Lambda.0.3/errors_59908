@@ -1,0 +1,12 @@
+ERROR: LoadError: ArgumentError: cannot parse ".0.3" as Float64
+Stacktrace:
+ [1] _parse_failure(::Type, ::String, ::Int64, ::Int64) at ./parse.jl:357 (repeats 2 times)
+ [2] tryparse_internal at ./parse.jl:353 [inlined]
+ [3] parse(::Type{Float64}, ::String) at ./parse.jl:363
+ [4] top-level scope at none:0
+ [5] include at ./boot.jl:317 [inlined]
+ [6] include_relative(::Module, ::String) at ./loading.jl:1041
+ [7] include(::Module, ::String) at ./sysimg.jl:29
+ [8] exec_options(::Base.JLOptions) at ./client.jl:229
+ [9] _start() at ./client.jl:421
+in expression starting at /lustre/fs23/group/nic/stornati/big_fss/fss.jl:21

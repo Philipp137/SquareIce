@@ -1,0 +1,1 @@
+/var/spool/slurmd/job59896/slurm_script: line 27: 43762 Killed                  /lustre/fs23/group/nic/stornati/julia/julia /lustre/fs23/group/nic/stornati/big_fss/fss.jl 60 20 -0.1 >> scaling
