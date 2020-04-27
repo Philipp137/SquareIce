@@ -112,3 +112,7 @@ venv.bak/
 *.tags
 *.swp
 
+#latex specific
+*.aux
+*.fls
+*.fdb_latexmk
