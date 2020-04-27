@@ -1,5 +1,6 @@
 using DataFrames
 using Plots
+using LaTeXStrings
 
 ## READ Data
 dir="/home/phil/develop/SquareIce/big_fss/"
@@ -37,19 +38,27 @@ end
 
 
 ## %% Plot chess operators
-p=[plot(),plot()]
+p=[plot(),plot(),plot()]
 gr() # Set the backend to Plotly
 for L in unique(data.Lsize)
     println("plotting chess L=", L)
-    plot!(p[1],data[data.Lsize.==L,:].coupling,data[data.Lsize.==L,:].chess_up,
-    label=string("L=",string(L)), ls=(:dot),marker = (:dot))
-    plot!(p[2],data[data.Lsize.==L,:].coupling,data[data.Lsize.==L,:].chess_down,
-    label=string("L=",string(L)), ls=(:dot),marker = (:dot))
+    Ma=data[data.Lsize.==L,:].coupling,data[data.Lsize.==L,:].chess_up
+    Mb=data[data.Lsize.==L,:].coupling,data[data.Lsize.==L,:].chess_down
+    plot!(p[1],Ma, label=string("L=",string(L)), ls=(:dot),marker = (:dot))
+    plot!(p[2],Mb, label=string("L=",string(L)), ls=(:dot),marker = (:dot))
+    if L==60
+        plot!(p[3],Ma[1],Ma[2].^2 + Mb[2].^2,label=string("L=",string(L)), ls=(:dot),marker = (:dot,:hexagon))
+    elseif L==20
+        plot!(p[3],Ma[1],Ma[2].^2 + Mb[2].^2,label=string("L=",string(L)), ls=(:dashed),marker = (:hexagon))
+    else
+
+    end
 end
-xlabel!("Lambda")
-ylabel!(p[1],"chess_up")
-ylabel!(p[2],"chess_down")
-plot(p[1],p[2],layout=(2,1),legend=:bottomleft)
+xlabel!("\$\\lambda\$")
+ylabel!(p[1],"\$<{M}_A>\$")
+ylabel!(p[2],"\$<{M}_B>\$")
+ylabel!(p[3],"\$<{M}_A^2+{M}_B^2>\$")
+plot(p[1],p[2],p[3],layout=(3,1),legend=:bottomleft)
 current()
-# save figure 
+# save figure
 savefig(string( dir,"/../notes/images/chessop.pdf"))
