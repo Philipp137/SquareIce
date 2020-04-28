@@ -44,24 +44,21 @@ function chess_operator_down(N::Int;   coupling=1. )
 
     Modd[1,:,3,:] = operator_7
     Meven[3,:,D,:] = operator_8
-"""
+
     Meven[1,:,4,:] = operator_5_dag
-    Modd[4,:,D,:] = operator_6_dag
+    Modd[4,:,D,:] =  -1.*operator_6_dag
 
     Modd[1,:,5,:] = operator_7_dag
-    Meven[5,:,D,:] = operator_8_dag
-"""
-   
+    Meven[5,:,D,:] = -1.*operator_8_dag
 
 
     MN[2,:,D,:]  = operator_6
 
     MN[3,:,D,:] = operator_8
-"""
-    MN[4,:,D,:] = operator_6_dag
 
-    MN[5,:,D,:] = operator_8_dag
-"""
+    MN[4,:,D,:] = -1.*operator_6_dag
+
+    MN[5,:,D,:] = -1.*operator_8_dag
     mpo= [ Modd[1:1,:,:,:] ]
 
     for site = 2:N-1;
@@ -120,35 +117,31 @@ function chess_operator_up(N::Int;   coupling=1. )
 
     Modd[1,:,3,:] = operator_7
     Meven[3,:,D,:] = operator_8
-"""
+
     Meven[1,:,4,:] = operator_5_dag
-    Modd[4,:,D,:] = operator_6_dag
+    Modd[4,:,D,:] =  -1.*operator_6_dag
 
     Modd[1,:,5,:] = operator_7_dag
-    Meven[5,:,D,:] = operator_8_dag
-"""
-   
+    Meven[5,:,D,:] = -1.*operator_8_dag
 
 
     MN[2,:,D,:]  = operator_6
 
     MN[3,:,D,:] = operator_8
-"""
-    MN[4,:,D,:] = operator_6_dag
 
-    MN[5,:,D,:] = operator_8_dag
-"""
+    MN[4,:,D,:] = -1.*operator_6_dag
 
-    M = Modd
-    Modd=Meven
-    Meven=M 
-    mpo= [ Modd[1:1,:,:,:] ]
+    MN[5,:,D,:] = -1.*operator_8_dag
+
+    #even and odd are inveted in the computation of the mpo since it has the same method before
+
+    mpo= [ Meven[1:1,:,:,:] ]
 
     for site = 2:N-1;
         if iseven(site)
-            push!(mpo, -1*Meven[:,:,:,:])
+            push!(mpo, Modd[:,:,:,:])
         else
-            push!(mpo, Modd[:,:,:,:])  
+            push!(mpo, Meven[:,:,:,:])  
         end
     end
 
