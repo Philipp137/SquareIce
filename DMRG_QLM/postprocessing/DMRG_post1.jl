@@ -3,7 +3,8 @@ using Plots
 using LaTeXStrings
 
 ## READ Data
-dir="/home/phil/develop/SquareIce/big_fss/"
+dir="/home/phil/develop/SquareIce/small_check_chess/"
+#dir="~/Desktop/tensor_network/SquareIce/small_check_chess/"
 #data=readtable(fname, separator=' ')
 data=[]
 lambda=0;Lsize=0
@@ -20,7 +21,11 @@ for (root, dirs, files) in walkdir(dir)
             df=readtable(fpath, separator=' ')
             ## insert lattice size
             m=match(r"/L(?<Lsize>\d+)",root)
-            insert!(df,1,parse(Int64,m[:Lsize]),:Lsize)
+            if m===nothing
+                df.Lsize = 0
+            else
+                insert!(df,1,parse(Int64,m[:Lsize]),:Lsize)
+            end
             ## append the data or create new array
             if counter==0
                 data =DataFrame(df[size(df,1),:])
@@ -44,12 +49,12 @@ for L in unique(data.Lsize)
     println("plotting chess L=", L)
     Ma=data[data.Lsize.==L,:].coupling,data[data.Lsize.==L,:].chess_up
     Mb=data[data.Lsize.==L,:].coupling,data[data.Lsize.==L,:].chess_down
-    plot!(p[1],Ma, label=string("L=",string(L)), ls=(:dot),marker = (:dot))
-    plot!(p[2],Mb, label=string("L=",string(L)), ls=(:dot),marker = (:dot))
+    plot!(p[1],Ma, label=string("L=",string(L)), ls=(:none),marker = (:dot))
+    plot!(p[2],Mb, label=string("L=",string(L)), ls=(:none),marker = (:dot))
     if L==60
-        plot!(p[3],Ma[1],Ma[2].^2 + Mb[2].^2,label=string("L=",string(L)), ls=(:dot),marker = (:dot,:hexagon))
+        plot!(p[3],Ma[1],Ma[2].^2 + Mb[2].^2,label=string("L=",string(L)), ls=(:none),marker = (:cross,))
     elseif L==20
-        plot!(p[3],Ma[1],Ma[2].^2 + Mb[2].^2,label=string("L=",string(L)), ls=(:dashed),marker = (:hexagon))
+        plot!(p[3],Ma[1],Ma[2].^2 + Mb[2].^2,label=string("L=",string(L)),ls=(:none),marker = (:hexagon))
     else
 
     end
