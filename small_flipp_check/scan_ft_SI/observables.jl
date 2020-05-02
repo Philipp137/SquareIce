@@ -63,5 +63,3 @@ function operator_flipp(N::Int;   coupling=1. )
 
     return mpo
 end
-
-print(operator_flipp(10))
