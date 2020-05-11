@@ -62,7 +62,6 @@ function operator_flipp(N::Int;   coupling=1. )
     return mpo
 end
 
-print(operator_flipp(10))
 
 
 # 1. Oflip = < \sum_plaq f_\plaq^2 >;
@@ -187,15 +186,15 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
     end
 
     # construct MPO
-    # mpo= [ M[1:1,:,:,:] ]
-    #
-    # for site = 2:N-1;
-    #     push!(mpo, M[:,:,:,:])
-    # end
-    #
-    # push!(mpo, MN[:,:,D:D,:])
-    #
-    # return mpo
+    mpo= [ M[1:1,:,:,:] ]
+
+    for site = 2:N-1;
+        push!(mpo, M[:,:,:,:])
+    end
+
+    push!(mpo, MN[:,:,D:D,:])
+
+    return mpo
 end
 
 
@@ -203,4 +202,4 @@ end
 
 #print(operator_Oflip(10))
 
-print(operator_sublattice_energy(10,"C"))
+#print(operator_sublattice_energy(10,"A"))
