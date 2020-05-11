@@ -2,14 +2,14 @@ using LinearAlgebra, TensorOperations, KrylovKit
 
 
 
-function chess_operator_down(N::Int;   coupling=1. )
+function chess_operator_down(N::Int )
     sp = [0. 1.; 0. 0.]
     sm = [0. 0.; 1. 0.]
     sz = [1. 0.; 0. -1.]
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
-    
+
     s=16
     D = 6
     M = zeros(D, s, D, s) ;
@@ -28,14 +28,14 @@ function chess_operator_down(N::Int;   coupling=1. )
 
     operator_5=kron(kron(kron(pm,u),pm),pp)
     operator_6=kron(kron(kron(pp,u),u),u)
-    
+
     operator_7=kron(kron(kron(u,pm),pp),pm)
     operator_8=kron(kron(kron(u,pp),u),u)
-    
+
 
     operator_5_dag=kron(kron(kron(pp,u),pp),pm)
     operator_6_dag=kron(kron(kron(pm,u),u),u)
-    
+
     operator_7_dag=kron(kron(kron(u,pp),pm),pp)
     operator_8_dag=kron(kron(kron(u,pm),u),u)
 
@@ -65,7 +65,7 @@ function chess_operator_down(N::Int;   coupling=1. )
         if iseven(site)
             push!(mpo, -1*Meven[:,:,:,:])
         else
-            push!(mpo, Modd[:,:,:,:])  
+            push!(mpo, Modd[:,:,:,:])
         end
     end
 
@@ -75,14 +75,14 @@ function chess_operator_down(N::Int;   coupling=1. )
 end
 
 
-function chess_operator_up(N::Int;   coupling=1. )
+function chess_operator_up(N::Int)
     sp = [0. 1.; 0. 0.]
     sm = [0. 0.; 1. 0.]
     sz = [1. 0.; 0. -1.]
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
-    
+
     s=16
     D = 6
     M = zeros(D, s, D, s) ;
@@ -101,14 +101,14 @@ function chess_operator_up(N::Int;   coupling=1. )
 
     operator_5=kron(kron(kron(pm,u),pm),pp)
     operator_6=kron(kron(kron(pp,u),u),u)
-    
+
     operator_7=kron(kron(kron(u,pm),pp),pm)
     operator_8=kron(kron(kron(u,pp),u),u)
-    
+
 
     operator_5_dag=kron(kron(kron(pp,u),pp),pm)
     operator_6_dag=kron(kron(kron(pm,u),u),u)
-    
+
     operator_7_dag=kron(kron(kron(u,pp),pm),pp)
     operator_8_dag=kron(kron(kron(u,pm),u),u)
 
@@ -141,7 +141,7 @@ function chess_operator_up(N::Int;   coupling=1. )
         if iseven(site)
             push!(mpo, Modd[:,:,:,:])
         else
-            push!(mpo, Meven[:,:,:,:])  
+            push!(mpo, Meven[:,:,:,:])
         end
     end
 

@@ -50,14 +50,17 @@ winding_number= deleteat!(winding_number , N)
 #println(sum(winding_number) )
 
 
-chess_down=chess_operator_down(N)
+EA_mpo=operator_sublattice_energy(N,"A")
 
-chess_up=chess_operator_up(N)
+EB_mpo=operator_sublattice_energy(N,"B")
 
-down = measure_mpo!(A,chess_down)
+Oflip_mpo = operator_Oflip(N)
 
-up = measure_mpo!(A,chess_up)
+# Measure
+EA    = measure_mpo!(A,EA_mpo)
+EB    = measure_mpo!(A,EB_mpo)
+Oflip = measure_mpo!(A,Oflip_mpo)
 #println(E)
 
-println("Number_Plaquettes  coupling       chemical        theta           Bond_dimention       Energy_GS                        winding_number                 chess_down              chess_up ")
-println("$(N-1)                  $coupling_interaction            $chemical_potential             $theta             $D                   $E            $(real(sum(winding_number)))              $(real(down))     $(real(up)) ")
+println("Number_Plaquettes  coupling       chemical        theta           Bond_dimention       Energy_GS                        winding_number                 EA              EB              Oflipp ")
+println("$(N-1)                  $coupling_interaction            $chemical_potential             $theta             $D                   $E            $(real(sum(winding_number)))              $(real(EA))     $(real(EB))     $(real(Oflipp))")
