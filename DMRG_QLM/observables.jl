@@ -197,7 +197,7 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
             end
         end
 
-        if N-1%2==0
+        if (N-1)%2==0
             push!(mpo, MN1[:,:,D:D,:])
         else
             push!(mpo, MN2[:,:,D:D,:])
@@ -211,7 +211,7 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
             end
         end
 
-        if N-1%2 == 0
+        if (N-1)%2 == 0
             push!(mpo, MN2[:,:,D:D,:])
         else
             push!(mpo, MN1[:,:,D:D,:])
