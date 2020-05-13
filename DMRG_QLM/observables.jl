@@ -136,15 +136,20 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
 
     s=16
     D = 4
-    M = zeros(D, s, D, s) ;
-    MN = zeros(D, s, D, s) ;
+    M1 = zeros(D, s, D, s) ;
+    MN1 = zeros(D, s, D, s) ;
+
+    M2 = zeros(D, s, D, s) ;
+    MN2 = zeros(D, s, D, s) ;
+
 
     I= operator_2=kron(kron(kron(u,u),u),u)
 
 
-    M[1,:,1,:] = I ; M[ D,:,D,:] = I
-    MN[1,:,1,:] = I ;    MN[ D,:,D,:] = I
-
+    M1[1,:,1,:] = I ; M1[ D,:,D,:] = I
+    MN1[1,:,1,:] = I ;    MN1[ D,:,D,:] = I
+    M2[1,:,1,:] = I ; M2[ D,:,D,:] = I
+    MN2[1,:,1,:] = I ;    MN2[ D,:,D,:] = I
 
     operator_5=kron(kron(kron(pm,u),pm),pp)
     operator_6=kron(kron(kron(pp,u),u),u)
@@ -159,26 +164,58 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
     operator_7_dag=kron(kron(kron(u,pp),pm),pp)
     operator_8_dag=kron(kron(kron(u,pm),u),u)
 
+
+    # first plaquette
+    M1[1,:,2,:] = operator_5
+    M1[2,:,D,:] = operator_6
+
+    M1[1,:,3,:] = operator_5_dag
+    M1[3,:,D,:] = operator_6_dag
+
+    MN1[2,:,D,:]  = operator_6
+    MN1[3,:,D,:] = operator_6_dag
+
+    # second plaquette
+    M2[1,:,2,:] = operator_7
+    M2[2,:,D,:] = operator_8
+
+    M2[1,:,3,:] = operator_7_dag
+    M2[3,:,D,:] = operator_8_dag
+
+    MN2[2,:,D,:] = operator_8
+    MN2[3,:,D,:] = operator_8_dag
+
+
+    mpo= [ M1[1:1,:,:,:] ]
+
     if sublattice=="A"
-        M[1,:,2,:] = operator_5
-        M[2,:,D,:] = operator_6
+        for site = 2:N-1;
+            if site % 2 == 0
+                push!(mpo, M1[:,:,:,:])
+            else
+                push!(mpo, M2[:,:,:,:])
+            end
+        end
 
-        M[1,:,3,:] = operator_5_dag
-        M[3,:,D,:] = operator_6_dag
-
-        # last site
-        MN[2,:,D,:]  = operator_6
-        MN[3,:,D,:] = operator_6_dag
+        if N-1%2==0
+            push!(mpo, MN1[:,:,D:D,:])
+        else
+            push!(mpo, MN2[:,:,D:D,:])
+        end
     elseif sublattice=="B"
-        M[1,:,2,:] = operator_7
-        M[2,:,D,:] = operator_8
+        for site = 2:N-1;
+            if site % 2 == 0
+                push!(mpo, M2[:,:,:,:])
+            else
+                push!(mpo, M1[:,:,:,:])
+            end
+        end
 
-        M[1,:,3,:] = operator_7_dag
-        M[3,:,D,:] = operator_8_dag
-
-        # last site
-        MN[2,:,D,:] = operator_8
-        MN[3,:,D,:] = operator_8_dag
+        if N-1%2 == 0
+            push!(mpo, MN2[:,:,D:D,:])
+        else
+            push!(mpo, MN1[:,:,D:D,:])
+        end
     else
         print("\nI dont know this wired sublattice called: '", sublattice, "'\n")
         print("Please specify with sublattice =['A' or 'B']")
@@ -186,13 +223,7 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
     end
 
     # construct MPO
-    mpo= [ M[1:1,:,:,:] ]
 
-    for site = 2:N-1;
-        push!(mpo, M[:,:,:,:])
-    end
-
-    push!(mpo, MN[:,:,D:D,:])
 
     return mpo
 end
