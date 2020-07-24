@@ -6,6 +6,9 @@ using LinearAlgebra, TensorOperations, KrylovKit
 include("qlm_mpo.jl")
 include("func_dmrg.jl")
 include("chess_operator.jl")
+include("observables.jl ")
+
+
 s=16
 D= 20
 N = 5
@@ -16,7 +19,7 @@ coupling_interaction=1.0
 chemical_potential=0.0
 theta=0.0
 
-#M =  mpoqlm(N ; coupling=1.  );
+M =  mpoqlm(N ; coupling=1.  );
 #M =  mpoqlm_fixed_boundary_contitions(N ; coupling=1.  );
 #M =  mpoqlm_fixed_with_interaction(N ; coupling=coupling_interaction  );
 #M =  mpoqlm_with_interaction_and_chemical_potential(N ; coupling=coupling_interaction  , mu=chemical_potential=1.);
@@ -25,7 +28,7 @@ theta=0.0
 
 
 
-#E, A, F = dmrgconvergence!(A, M ; verbose = true);
+E, A, F = dmrgconvergence!(A, M ; verbose = true);
 
 
 N=N-1
@@ -34,8 +37,8 @@ N=N+1
 
 sp = [0. 1.; 0. 0.]
 sm = [0. 0.; 1. 0.]
-sz = [1. 0.; 0. -1.]
-u = [1. 0.; 0. 1.]
+sz = [1. 0.; 0. -1.0]
+u = [1. 0.; 0. 1.0]
 pp = [1. 0.; 0. 0.]
 pm = [0. 0.; 0. 1.]
 
