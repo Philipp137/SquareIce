@@ -1,3 +1,7 @@
+
+######################################################
+# 13.12.2020 This routine was replaced by mpos.jl (PK)
+######################################################
 using LinearAlgebra, TensorOperations, KrylovKit
 
 
@@ -20,7 +24,7 @@ function mpoqlm(N::Int;   coupling=1. )
     operator_2=kron(kron(kron(sp,u),u),u)
     operator_3=kron(kron(kron(u,sm),sp),sm)
     operator_4=kron(kron(kron(u,sp),u),u)
-    operator_1_dag=kron(kron(kron(sp,u),sp),sm)    
+    operator_1_dag=kron(kron(kron(sp,u),sp),sm)
     operator_2_dag=kron(kron(kron(sm,u),u),u)
     operator_3_dag=kron(kron(kron(u,sp),sm),sp)
     operator_4_dag=kron(kron(kron(u,sm),u),u)
@@ -55,7 +59,7 @@ function    (N::Int;   coupling=1. )
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
-    
+
     s=16
     D = 6
     M = zeros(D, s, D, s) ;
@@ -73,7 +77,7 @@ function    (N::Int;   coupling=1. )
     operator_2=kron(kron(kron(sp,u),u),u)
     operator_3=kron(kron(kron(u,sm),sp),sm)
     operator_4=kron(kron(kron(u,sp),u),u)
-    operator_1_dag=kron(kron(kron(sp,u),sp),sm)    
+    operator_1_dag=kron(kron(kron(sp,u),sp),sm)
     operator_2_dag=kron(kron(kron(sm,u),u),u)
     operator_3_dag=kron(kron(kron(u,sp),sm),sp)
     operator_4_dag=kron(kron(kron(u,sm),u),u)
@@ -120,7 +124,7 @@ function mpoqlm_fixed_with_interaction(N::Int;   coupling=-1. )
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
-    
+
     s=16
     D = 10
     M = zeros(D, s, D, s) ;
@@ -139,20 +143,20 @@ function mpoqlm_fixed_with_interaction(N::Int;   coupling=-1. )
 
     operator_5=coupling*kron(kron(kron(pm,u),pm),pp)
     operator_6=kron(kron(kron(pp,u),u),u)
-    
+
     operator_7=coupling*kron(kron(kron(u,pm),pp),pm)
     operator_8=kron(kron(kron(u,pp),u),u)
-    
 
-    operator_1_dag=-1*kron(kron(kron(sp,u),sp),sm)    
+
+    operator_1_dag=-1*kron(kron(kron(sp,u),sp),sm)
     operator_2_dag=kron(kron(kron(sm,u),u),u)
-    
+
     operator_3_dag=-1*kron(kron(kron(u,sp),sm),sp)
     operator_4_dag=kron(kron(kron(u,sm),u),u)
 
     operator_5_dag=coupling*kron(kron(kron(pp,u),pp),pm)
     operator_6_dag=kron(kron(kron(pm,u),u),u)
-    
+
     operator_7_dag=coupling*kron(kron(kron(u,pp),pm),pp)
     operator_8_dag=kron(kron(kron(u,pm),u),u)
 
@@ -211,7 +215,7 @@ function mpoqlm_with_interaction_and_chemical_potential(N::Int;   coupling=-1. ,
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
-    
+
     s=16
     D = 10
     M = zeros(D, s, D, s) ;
@@ -233,20 +237,20 @@ function mpoqlm_with_interaction_and_chemical_potential(N::Int;   coupling=-1. ,
 
     operator_5=coupling*kron(kron(kron(pm,u),pm),pp)
     operator_6=kron(kron(kron(pp,u),u),u)
-    
+
     operator_7=coupling*kron(kron(kron(u,pm),pp),pm)
     operator_8=kron(kron(kron(u,pp),u),u)
-    
 
-    operator_1_dag=-1*kron(kron(kron(sp,u),sp),sm)    
+
+    operator_1_dag=-1*kron(kron(kron(sp,u),sp),sm)
     operator_2_dag=kron(kron(kron(sm,u),u),u)
-    
+
     operator_3_dag=-1*kron(kron(kron(u,sp),sm),sp)
     operator_4_dag=kron(kron(kron(u,sm),u),u)
 
     operator_5_dag=coupling*kron(kron(kron(pp,u),pp),pm)
     operator_6_dag=kron(kron(kron(pm,u),u),u)
-    
+
     operator_7_dag=coupling*kron(kron(kron(u,pp),pm),pp)
     operator_8_dag=kron(kron(kron(u,pm),u),u)
 
@@ -315,7 +319,7 @@ function mpoqlm_with_interaction_chemical_potential_and_magneti_field(N::Int;   
     pm = [0. 0.; 0. 1.]
     phi=exp(im*theta)
     phi_star=exp(-1*im*theta)
-    sp=promtocompl(sp) ;    sm= promtocompl(sm) ;  sz=   promtocompl(sz) ;   u=  promtocompl(u) ;   pp=  promtocompl(pp)  ; pm= promtocompl(pm) ;   
+    sp=promtocompl(sp) ;    sm= promtocompl(sm) ;  sz=   promtocompl(sz) ;   u=  promtocompl(u) ;   pp=  promtocompl(pp)  ; pm= promtocompl(pm) ;
 
     s=16
     D = 10
@@ -332,7 +336,7 @@ function mpoqlm_with_interaction_chemical_potential_and_magneti_field(N::Int;   
     MN[1,:,1,:] = I ;    MN[ D,:,D,:] = I
     M = convert(Array{Complex{Float64},4},M)
     MN = convert(Array{Complex{Float64},4},MN)
-    
+
 
     operator_1=-1*phi*kron(kron(kron(sm,u),sm),sp)
     operator_2=kron(kron(kron(sp,u),u),u)
@@ -341,20 +345,20 @@ function mpoqlm_with_interaction_chemical_potential_and_magneti_field(N::Int;   
 
     operator_5=coupling*kron(kron(kron(pm,u),pm),pp)
     operator_6=kron(kron(kron(pp,u),u),u)
-    
+
     operator_7=coupling*kron(kron(kron(u,pm),pp),pm)
     operator_8=kron(kron(kron(u,pp),u),u)
-    
 
-    operator_1_dag=-1*phi_star*kron(kron(kron(sp,u),sp),sm)    
+
+    operator_1_dag=-1*phi_star*kron(kron(kron(sp,u),sp),sm)
     operator_2_dag=kron(kron(kron(sm,u),u),u)
-    
+
     operator_3_dag=-1*phi_star*kron(kron(kron(u,sp),sm),sp)
     operator_4_dag=kron(kron(kron(u,sm),u),u)
 
     operator_5_dag=coupling*kron(kron(kron(pp,u),pp),pm)
     operator_6_dag=kron(kron(kron(pm,u),u),u)
-    
+
     operator_7_dag=coupling*kron(kron(kron(u,pp),pm),pp)
     operator_8_dag=kron(kron(kron(u,pm),u),u)
 

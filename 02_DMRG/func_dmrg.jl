@@ -59,59 +59,58 @@ function updaterightenv(A, M, FR)
 end
 
 
-function dmrg1sweep!(A, H, F = nothing; verbose = true, kwargs...)
-    N = length(A)
-    
-    if F == nothing
-        F = Vector{Any}(undef, N+2)
-        F[1] = fill!(similar(H[1], (1,1,1)), 1)
-        F[N+2] = fill!(similar(H[1], (1,1,1)), 1)
-        for k = N:-1:1
-            F[k+1] = updaterightenv(A[k], M[k], F[k+2])
-        end
-    end
-
-    AC = A[1]
-    for k = 1:N-1
-        Es, ACs, info = eigsolve(x->applyH1(x, F[k], F[k+2], M[k]), AC, 1, :SR; ishermitian = true, kwargs...)
-        AC = ACs[1]
-        E = Es[1]
-
-        verbose && println("Sweep L2R: site $k -> energy $E")
-
-        AL, C = qr(reshape(AC, size(AC,1)*size(AC,2), :))
-        A[k] = reshape(Matrix(AL), size(AC))
-        F[k+1] = updateleftenv(A[k], M[k], F[k])
-
-        @tensor AC[-1,-2,-3] := C[-1,1] * A[k+1][1,-2,-3]
-    end
-    k = N
-    Es, ACs, info = eigsolve(x->applyH1(x, F[k], F[k+2], M[k]), AC, 1, :SR; ishermitian = true, kwargs...)
-    AC = ACs[1]
-    E = Es[1]
-    verbose && println("Sweep L2R: site $k -> energy $E")
-    for k = N-1:-1:1
-        C, AR = lq(reshape(AC, size(AC,1), :))
-        # it's actually better to do qr of transpose and transpose back
-
-        A[k+1] = reshape(Matrix(AR), size(AC))
-        F[k+2] = updaterightenv(A[k+1], M[k+1], F[k+3])
-
-        @tensor AC[:] := A[k][-1,-2,1] * C[1,-3]
-        Es, ACs, info = eigsolve(x->applyH1(x, F[k], F[k+2], M[k]), AC, 1, :SR; ishermitian = true, kwargs...)
-        AC = ACs[1]
-        E = Es[1]
-        verbose && println("Sweep R2L: site $k -> energy $E")
-    end
-    A[1] = AC
-    return E, A, F
-end
+# function dmrg1sweep!(A, H, F = nothing; verbose = true, kwargs...)
+#     N = length(A)
+#
+#     if F == nothing
+#         F = Vector{Any}(undef, N+2)
+#         F[1] = fill!(similar(H[1], (1,1,1)), 1)
+#         F[N+2] = fill!(similar(H[1], (1,1,1)), 1)
+#         for k = N:-1:1
+#             F[k+1] = updaterightenv(A[k], M[k], F[k+2])
+#         end
+#     end
+#
+#     AC = A[1]
+#     for k = 1:N-1
+#         Es, ACs, info = eigsolve(x->applyH1(x, F[k], F[k+2], M[k]), AC, 1, :SR; ishermitian = true, kwargs...)
+#         AC = ACs[1]
+#         E = Es[1]
+#
+#         verbose && println("Sweep L2R: site $k -> energy $E")
+#
+#         AL, C = qr(reshape(AC, size(AC,1)*size(AC,2), :))
+#         A[k] = reshape(Matrix(AL), size(AC))
+#         F[k+1] = updateleftenv(A[k], M[k], F[k])
+#
+#         @tensor AC[-1,-2,-3] := C[-1,1] * A[k+1][1,-2,-3]
+#     end
+#     k = N
+#     Es, ACs, info = eigsolve(x->applyH1(x, F[k], F[k+2], M[k]), AC, 1, :SR; ishermitian = true, kwargs...)
+#     AC = ACs[1]
+#     E = Es[1]
+#     verbose && println("Sweep L2R: site $k -> energy $E")
+#     for k = N-1:-1:1
+#         C, AR = lq(reshape(AC, size(AC,1), :))
+#         # it's actually better to do qr of transpose and transpose back
+#
+#         A[k+1] = reshape(Matrix(AR), size(AC))
+#         F[k+2] = updaterightenv(A[k+1], M[k+1], F[k+3])
+#
+#         @tensor AC[:] := A[k][-1,-2,1] * C[1,-3]
+#         Es, ACs, info = eigsolve(x->applyH1(x, F[k], F[k+2], M[k]), AC, 1, :SR; ishermitian = true, kwargs...)
+#         AC = ACs[1]
+#         E = Es[1]
+#         verbose && println("Sweep R2L: site $k -> energy $E")
+#     end
+#     A[1] = AC
+#     return E, A, F
+# end
 
 
 
 function dmrg2sweep!(A, M, F = nothing; verbose = true, truncdim = 200, truncerr = 1e-6, kwargs...)
     N = length(A)
-
     if F == nothing
         F = Vector{Any}(undef, N+2)
         F[1] = fill!(similar(M[1], (1,1,1)), 1)
@@ -173,7 +172,7 @@ end
 
 function dmrgconvergence!(A, M , F = nothing ;  verbose = true, kwargs...)
     N = length(A)
-    
+
     if F == nothing
         F = Vector{Any}(undef, N+2)
         F[1] = fill!(similar(M[1], (1,1,1)), 1)
@@ -187,14 +186,14 @@ function dmrgconvergence!(A, M , F = nothing ;  verbose = true, kwargs...)
     conv = 1.0e-8
     E = Vector{Float64}(undef, max_sweep)
     counter=2
-    E[1], A,  F = dmrg1sweep!( A, M; verbose = false);
+    E[1], A,  F = dmrg2sweep!( A, M; verbose = false);
 #    println("1")
 #    println(E[1])
     E[2]=1.
 
     while  abs(E[counter]-E[counter-1]) > conv
         counter+=1
-        E[counter], A, F = dmrg1sweep!(A, M, F; verbose = false);    
+        E[counter], A, F = dmrg2sweep!(A, M, F; verbose = false);
 #        println(counter-1)
 #        println(E[counter])
     end
@@ -230,40 +229,105 @@ function measure_mpo!(A, M )
     FL=F[N+1]
     FR=F[N+2]
    @tensor E = scalar(  FL[α,a,α']*FR[α',a,α]   )
-    return E 
+    return E
     end
 
 
 
-function dmrgconvergence_in_D!(D, D_max , A, M , F = nothing ;  verbose = true, kwargs...)
+function dmrgconvergence_in_D!(s, D, D_max , A, M , F = nothing ;  verbose = true, kwargs...)
     N = length(A)
-    
+
     A = randmps(N, s, D);
 
     max_sweep=100
     conv = 1.0e-8
     E = Vector{Float64}(undef, max_sweep)
     counter=2
-    E[2], A, F = dmrg1sweep!( A, M; verbose = false);
+
+    E[2], A, F = dmrg2sweep!( A, M; verbose = false);
+
     B=[]
     G=[]
 #    push!(A,B)
 #    push!(F,G)
 
-   
     E[1]=E[2]+1.
     println("$N  $D    $(E[2])   ")
-    while  abs(E[counter]-E[counter-1]) > conv 
+    while  abs(E[counter]-E[counter-1]) > conv
         D=2*D
         counter+=1
-        E[counter], A, F = dmrg2sweep!(A , M ; verbose = false, truncdim = D , truncerr = 1e-10 ) 
+        E[counter], A, F = dmrg2sweep!(A , M ; verbose = false, truncdim = D , truncerr = 1e-10 )
         E[counter], A, F  = dmrgconvergence!(A, M , F  ; verbose = true);
 #        push!(A,B)
 #        push!(F,G)
         println("$N  $D    $(E[counter])   ")
     end
-    return E , A, F
+    return E , A, F, counter
 #    return E , B, G
 
 end
-    
+
+
+
+function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_potential  ,  theta  , s, D, D_max, A, M, F = nothing ;  verbose = false, kwargs...)
+    N = length(A)
+
+    A = randmps(N, s, D);
+
+    max_sweep = 100
+    conv = 1.0e-8
+    E = Vector{Float64}(undef, max_sweep)
+    counter = 2
+    sp = [0. 1.; 0. 0.]
+    sm = [0. 0.; 1. 0.]
+    sz = [1. 0.; 0. -1.]
+    u = [1. 0.; 0. 1.]
+    pp = [1. 0.; 0. 0.]
+    pm = [0. 0.; 0. 1.]
+
+    O = kron(kron(kron(u, u), sz), sz)
+
+    winding_number = measure1siteoperator(A, O)
+    winding_number = deleteat!(winding_number, N)
+
+    MPOflipp = operator_flipp(N)
+    flipp = measure_mpo!(A, MPOflipp)
+
+    E[2], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
+    println("$(N - 1)                  $coupling_interaction            $chemical_potential             $theta             $D                   $(E[counter-1])            $(real(sum(winding_number)))              $(real(flipp))     ")
+
+    B = []
+    G = []
+    sp = [0. 1.; 0. 0.]
+    sm = [0. 0.; 1. 0.]
+    sz = [1. 0.; 0. -1.]
+    u = [1. 0.; 0. 1.]
+    pp = [1. 0.; 0. 0.]
+    pm = [0. 0.; 0. 1.]
+
+    O = kron(kron(kron(u, u), sz), sz)
+
+    E[1] = E[2] + 1.
+    if verbose
+        println("$N  $D    $(E[2])   ")
+    end
+
+    while  abs(E[counter] - E[counter - 1]) > conv
+        D = 2 * D
+        counter += 1
+        E[counter], A, F = dmrg2sweep!(A, M ; verbose = false, truncdim = D , truncerr = 1e-10)
+        E[counter], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
+        winding_number = measure1siteoperator(A, O)
+        winding_number = deleteat!(winding_number, N)
+
+        flipp = measure_mpo!(A, MPOflipp)
+
+        println("$(N - 1)                  $coupling_interaction            $chemical_potential             $theta             $D                   $(E[counter-1])            $(real(sum(winding_number)))              $(real(flipp))     ")
+        if verbose
+            println("$N  $D    $(E[counter])   ")
+        end
+    end
+    return E, A, F , counter
+#    return E , B, G
+
+end

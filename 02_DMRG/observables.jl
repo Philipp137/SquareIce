@@ -229,6 +229,39 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
 end
 
 
+function Von_Neumann_entropy(A) # given a MPS return a array of all the values of the ent entropy for every point
+    N = length(A)
+    S_A=zeros(length(A))
+
+
+    for k = 1:N
+        U , S , Vt = svd(reshape(A[k], size(A[k],1)*size(A[k],2), :))
+        for i = 1:length(S)
+            S_A[k]+=-2*S[i]*S[i]*log(S[i])
+        end
+    end
+    return S_A
+end
+
+function MeasureTwoNNNSiteoperator(A, O_1, O_2 , k_1 , k_2)
+    N = length(A)
+    ρ = ones(eltype(A[1]), 1, 1)
+
+    for k = 1:N
+        if  k == k_2
+            @tensor ρ[a, b] := ρ[a', b'] * A[k][b', s, b] * O_2[s', s] * conj(A[k][a', s', a])
+        elseif  k == k_1
+            @tensor ρ[a, b] := ρ[a', b'] * A[k][b', s, b] * O_1[s', s] * conj(A[k][a', s', a])
+        else
+            @tensor ρ[a, b] := ρ[a', b'] * A[k][b', s, b] * conj(A[k][a', s, a])
+        end
+    end
+    eta= ones(eltype(A[1]), 1, 1)
+    @tensor v = scalar(ρ[a, b] * eta[a, b])
+
+    return v
+end
+
 
 
 #print(operator_Oflip(10))

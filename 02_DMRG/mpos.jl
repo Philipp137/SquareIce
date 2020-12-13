@@ -1,6 +1,7 @@
 module mpos
-#export plaquette_operators
+export mposqlm
 using LinearAlgebra, TensorOperations, KrylovKit
+
 
 #################################################
 # Paulimatrices and projectors:
@@ -127,7 +128,7 @@ function chemical_potential_operators(Ly::Int=2, mu=-1)
 end
 
 
-function mpoqlm(N::Int, Ly::Int=2, coupling=-1. , mu=-1 , theta= 0.)
+function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=-1. , theta= 0.)
 
     Nlinks = Ly * 2
     Nstates = 2^(Nlinks) # number of states for one chain element
