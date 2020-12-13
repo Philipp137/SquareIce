@@ -11,14 +11,14 @@ using Main.mpos: mpoqlm
 function dostuff(N ,  D , coupling)
     s = 16
     D_max = 10*D
-    println("Number_Plaquettes  coupling       chemical        theta           Bond_dimention       Energy_GS                        winding_number                 flipp ")
     A = randmps(N, s, D);
     chemical_potential = 0.0
     theta = 0.0
     mpo = mpoqlm(N, coupling=coupling , mu=chemical_potential , theta= theta);
     #mpo = mpoqlm(N, coupling=coupling );
     E, A, F, counter =   dmrgconvergence_in_D!(s, D, D_max, A, mpo);
-    dmrgconvergence_in_D_and_measure_op!(coupling, chemical_potential,  theta, s, D, D_max, A, mpo)
+    dmrgconvergence_in_D_and_measure_op!(coupling, chemical_potential,  theta, s, D, D_max, A, mpo);
+    println("\n")
 end
 
 

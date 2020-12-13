@@ -65,5 +65,5 @@ EB    = measure_mpo!(A,EB_mpo)
 Oflip = measure_mpo!(A,Oflip_mpo)
 #println(E)
 
-println("Number_Plaquettes  coupling       chemical        theta           Bond_dimention       Energy_GS                        winding_number                 EA              EB              Oflip ")
-println("$(N-1)                  $coupling_interaction            $chemical_potential             $theta             $D                   $E            $(real(sum(winding_number)))              $(real(EA))     $(real(EB))     $(real(Oflip))")
+println("Number_Plaquettes\tcoupling\tchemical\ttheta\tbond_dimension\tEnergy_GS\twinding_number\teA\teB\tOflip")
+println("$(N - 1)\t$coupling_interaction\t$chemical_potential\t$theta\t$D\t$(E[counter-1])\t$(real(sum(winding_number)))\t$(real(EA))\t$(real(EB))\t$(real(Oflip))")

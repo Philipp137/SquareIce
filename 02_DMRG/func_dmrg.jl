@@ -252,7 +252,7 @@ function dmrgconvergence_in_D!(s, D, D_max , A, M , F = nothing ;  verbose = tru
 #    push!(F,G)
 
     E[1]=E[2]+1.
-    println("$N  $D    $(E[2])   ")
+    #println("$N  $D    $(E[2])   ")
     while  abs(E[counter]-E[counter-1]) > conv
         D=2*D
         counter+=1
@@ -260,7 +260,7 @@ function dmrgconvergence_in_D!(s, D, D_max , A, M , F = nothing ;  verbose = tru
         E[counter], A, F  = dmrgconvergence!(A, M , F  ; verbose = true);
 #        push!(A,B)
 #        push!(F,G)
-        println("$N  $D    $(E[counter])   ")
+    #    println("$N  $D    $(E[counter])   ")
     end
     return E , A, F, counter
 #    return E , B, G
@@ -284,45 +284,49 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
-
     O = kron(kron(kron(u, u), sz), sz)
 
     winding_number = measure1siteoperator(A, O)
     winding_number = deleteat!(winding_number, N)
 
-    MPOflipp = operator_flipp(N)
-    flipp = measure_mpo!(A, MPOflipp)
-
+    # define operators
+    Oflipp_mpo = operator_flipp(N)
+    Oflip_mpo = operator_Oflip(N)
+    EA_mpo=operator_sublattice_energy(N,"A")
+    EB_mpo=operator_sublattice_energy(N,"B")
+    # measure operators
+    EA    = measure_mpo!(A,EA_mpo)
+    EB    = measure_mpo!(A,EB_mpo)
+    Oflip = measure_mpo!(A,Oflip_mpo)
+    Oflipp = measure_mpo!(A, Oflipp_mpo)
+    entropy = Von_Neumann_entropy(A)
     E[2], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
-    println("$(N - 1)                  $coupling_interaction            $chemical_potential             $theta             $D                   $(E[counter-1])            $(real(sum(winding_number)))              $(real(flipp))     ")
-
-    B = []
-    G = []
-    sp = [0. 1.; 0. 0.]
-    sm = [0. 0.; 1. 0.]
-    sz = [1. 0.; 0. -1.]
-    u = [1. 0.; 0. 1.]
-    pp = [1. 0.; 0. 0.]
-    pm = [0. 0.; 0. 1.]
-
-    O = kron(kron(kron(u, u), sz), sz)
-
+    println("Number_Plaquettes\tcoupling\tchemical\ttheta\tbond_dimension\tEnergy_GS\twinding_number\teA\teB\tOflip\tOflipp\tentropy")
+    println("$(N - 1)\t$coupling_interaction\t$chemical_potential\t$theta\t$D\t$(E[counter-1])\t$(real(sum(winding_number)))\t$(real(EA))\t$(real(EB))\t$(real(Oflip))\t$(real(Oflipp))\t$(real(entropy))")
     E[1] = E[2] + 1.
     if verbose
         println("$N  $D    $(E[2])   ")
     end
+
+    #println("Number_Plaquettes\ncoupling\nchemical\ntheta\nBond_dimention       Energy_GS                        winding_number                 flipp ")
+
 
     while  abs(E[counter] - E[counter - 1]) > conv
         D = 2 * D
         counter += 1
         E[counter], A, F = dmrg2sweep!(A, M ; verbose = false, truncdim = D , truncerr = 1e-10)
         E[counter], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
+
+        # Measure
         winding_number = measure1siteoperator(A, O)
         winding_number = deleteat!(winding_number, N)
-
-        flipp = measure_mpo!(A, MPOflipp)
-
-        println("$(N - 1)                  $coupling_interaction            $chemical_potential             $theta             $D                   $(E[counter-1])            $(real(sum(winding_number)))              $(real(flipp))     ")
+        EA    = measure_mpo!(A,EA_mpo)
+        EB    = measure_mpo!(A,EB_mpo)
+        Oflip = measure_mpo!(A,Oflip_mpo)
+        Oflipp = measure_mpo!(A, Oflipp_mpo)
+        entropy = Von_Neumann_entropy(A)
+        # print to console
+        println("$(N - 1)\t$coupling_interaction\t$chemical_potential\t$theta\t$D\t$(E[counter-1])\t$(real(sum(winding_number)))\t$(real(EA))\t$(real(EB))\t$(real(Oflip))\t$(real(Oflipp))\t$(real(entropy))")
         if verbose
             println("$N  $D    $(E[counter])   ")
         end

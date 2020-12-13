@@ -61,7 +61,7 @@ end
 
 function dmrg1sweep!(A, M, F = nothing; verbose = true, kwargs...)
     N = length(A)
-    
+
     if F == nothing
         F = Vector{Any}(undef, N + 2)
         F[1] = fill!(similar(M[1], (1, 1, 1)), 1)
@@ -173,7 +173,7 @@ end
 
 function dmrgconvergence!(A, M, F = nothing ;  verbose = true, kwargs...)
     N = length(A)
-    
+
     if F == nothing
         F = Vector{Any}(undef, N + 2)
         F[1] = fill!(similar(M[1], (1, 1, 1)), 1)
@@ -194,7 +194,7 @@ function dmrgconvergence!(A, M, F = nothing ;  verbose = true, kwargs...)
 
     while  abs(E[counter] - E[counter - 1]) > conv
         counter += 1
-        E[counter], A, F = dmrg1sweep!(A, M, F; verbose = false);    
+        E[counter], A, F = dmrg1sweep!(A, M, F; verbose = false);
 #        println(counter-1)
 #        println(E[counter])
     end
@@ -230,14 +230,14 @@ function measure_mpo!(A, M)
     FL = F[N + 1]
     FR = F[N + 2]
     @tensor E = scalar(FL[α,a,α'] * FR[α',a,α])
-    return E 
+    return E
 end
 
 
 
 function dmrgconvergence_in_D!(s, D, D_max, A, M, F = nothing ;  verbose = false, kwargs...)
     N = length(A)
-    
+
     A = randmps(N, s, D);
 
     max_sweep = 100
@@ -250,16 +250,16 @@ function dmrgconvergence_in_D!(s, D, D_max, A, M, F = nothing ;  verbose = false
 #    push!(A,B)
 #    push!(F,G)
 
-   
+
     E[1] = E[2] + 1.
     if verbose
         println("$N  $D    $(E[2])   ")
     end
 
-    while  abs(E[counter] - E[counter - 1]) > conv 
+    while  abs(E[counter] - E[counter - 1]) > conv
         D = 2 * D
         counter += 1
-        E[counter], A, F = dmrg2sweep!(A, M ; verbose = false, truncdim = D , truncerr = 1e-10) 
+        E[counter], A, F = dmrg2sweep!(A, M ; verbose = false, truncdim = D , truncerr = 1e-10)
         E[counter], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
 #        push!(A,B)
 #        push!(F,G)
@@ -271,11 +271,11 @@ function dmrgconvergence_in_D!(s, D, D_max, A, M, F = nothing ;  verbose = false
 #    return E , B, G
 
 end
-    
+
 
 function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_potential  ,  theta  , s, D, D_max, A, M, F = nothing ;  verbose = false, kwargs...)
     N = length(A)
-    
+
     A = randmps(N, s, D);
 
     max_sweep = 100
@@ -290,7 +290,7 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     pm = [0. 0.; 0. 1.]
 
     O = kron(kron(kron(u, u), sz), sz)
-   
+
     winding_number = measure1siteoperator(A, O)
     winding_number = deleteat!(winding_number, N)
     chess_down = chess_operator_down(N)
@@ -311,16 +311,16 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     pm = [0. 0.; 0. 1.]
 
     O = kron(kron(kron(u, u), sz), sz)
-   
+
     E[1] = E[2] + 1.
     if verbose
         println("$N  $D    $(E[2])   ")
     end
 
-    while  abs(E[counter] - E[counter - 1]) > conv 
+    while  abs(E[counter] - E[counter - 1]) > conv
         D = 2 * D
         counter += 1
-        E[counter], A, F = dmrg2sweep!(A, M ; verbose = false, truncdim = D , truncerr = 1e-10) 
+        E[counter], A, F = dmrg2sweep!(A, M ; verbose = false, truncdim = D , truncerr = 1e-10)
         E[counter], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
         winding_number = measure1siteoperator(A, O)
         winding_number = deleteat!(winding_number, N)

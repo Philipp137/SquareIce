@@ -1,6 +1,1 @@
-#!/bin/bash
-
-
-
-
-#executables
+ julia main.jl  9  80 -5.0  >> dmrg.log 
