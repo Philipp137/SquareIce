@@ -330,7 +330,7 @@ Magnetic field angle $\theta$       & 0 & $\theta_k =\frac{\pi}{4}k, k = 0,1,\do
 \end{table}
 
 \begin{figure}[htp!]
-  \includegraphics{../DMRG_QLM/data/extrapolation_in_bond_D/L_50/plot_extrapolation_in_bond_D_L_50_lam_0.pdf}
+  %\includegraphics{../DMRG_QLM/data/extrapolation_in_bond_D/L_50/plot_extrapolation_in_bond_D_L_50_lam_0.pdf}
   \caption{Extrapolation of the bond dimension}
   \label{}
 \end{figure}
@@ -341,6 +341,139 @@ Magnetic field angle $\theta$       & 0 & $\theta_k =\frac{\pi}{4}k, k = 0,1,\do
   \caption{Chess operators}
   \label{}
 \end{figure}
+
+
+\section{Von-Neumann entanglement entropy}
+
+Let us suppose we have the ground state of a gapped model on a lattice $V$ described by the density matrix $\rho$. The von  Neumann entropy is defined as:
+\begin{equation}
+S(\rho)=-Tr(\rho\log(\rho))
+\end{equation}
+The entropy of the ground-state is zero since it is a product state. We can not state this for subset of the system.
+We define a subset $A$ of $V$ suche that $B:=V / A $. We define the reduced density matrix of the sub-system as:
+\begin{equation} \label{eq:Apartition}
+\rho_A=Tr_B(\rho)
+\end{equation}
+We define the von-Neumann entropy of the subsystem $A$ as:
+\begin{equation}
+S(\rho_A)=-Tr(\rho_A\log_2(\rho_A))
+\end{equation}
+Now, the entropy $S(\rho_A)$ is null if the subsystems $A$ and $B$ are product states. This is not true if there is quantum correlations between $A$ and $B$. Quantum correlations can lead to non-vanishing values of $S(\rho_A)$. In fact, the von-Neumann entropy is a index of the entanglement for pure states. This is also why the von-Neumann entropy is also called entanglement entropy.
+\section{Matrix product states}
+
+We define the wavefunction of a quantum state as \cite{Schollw_ck_2011}:
+
+\begin{equation}
+\ket \psi = \sum{j_1,...,j_n} c_{j_1,...,j_n}  \ket{j_1} \otimes ... \otimes \ket{j_n}
+\end{equation}
+
+The matrix product state (MPS) Ansatz defines $c_{j_1,...,j_n}$ as:
+
+\begin{equation}
+c_{j_1,...,j_n}= \sum_{\alpha , \beta, \, ... \, , \gamma } A^{1}_{\alpha , \beta , j_1} A^{2}_{ \beta , \delta ,  j_2} \, ... \, A^{N}_{  \gamma , \alpha ,j_n}
+\end{equation}
+
+We can now make a comparison between the number of parameters there are in the exact description and the MPS Ansatz. If we have a system of $n$ spin physical dimension $d$ we have $\mathcal{O}(d^n)$ parameters in the exact description. If we decide to truncate the dimension of the greek(i.e. $\alpha \, \beta \, ...$) to be at most $D$ ($D$ is usually called $bond \, dimension$ in the literature ) indexes in the definition of the MPS Ansatz we have $\mathcal{O}(n d D^2 )$ parameters. \\
+\subsection{Gauge degree of freedom}
+
+A MPS is defined univocally but the tensors $A^{(i)}$. On the other the set of tensors $A^{(i)}$ that define a generic $\Psi$ is not unique. $\Psi$ is defined as the contraction of the tensors $A^{(i)}$.
+Given a element of $Gl_D(\mathbb{C})$ $M$, a MPS is invariant under the insertions:
+\begin{equation}
+A^{(i)}_{\alpha , \, \beta }A^{(i+1)}_{\beta, \, \gamma } = A^{(i)}_{\alpha , \, \beta }M_{{\beta, \, \delta } } M^{-1}_{{\delta , \, \xi } }A^{(i+1)}_{\xi, \, \gamma }
+\end{equation}
+At this point it is very important to remind the reader a fundamental too in linear algebra: The singular value decomposition (SVD). Given.a generic rectangular matrix $N$ is is always possible to find matrices $U, \, S, \, V$ such that:
+\begin{equation}
+N= U\,S\,V^\dag
+\end{equation}
+$U$ is a matrix containing the left singular vectors of $N$. Since $U$ has orthonormal columns it is also unitary $UU^\dagger=U^\dagger U=1$. $S$ is a diagonal matrix with non-negative entries. Those numbers $s_a$ are called the singular values of $N$. The number of non-zero singular values is the rank of $N$. $V^\dagger$ is a matrix that contains the right singular vectors. In the same way as  $U$, $V^\dagger$ has orthonormal columns it is also unitary $VV^\dagger=V^\dagger V=1$. The sigular values contained in $S$ has lot of interesting properties. Let us suppose we have a state $\ket \psi$. For any partition $A$ and $B$ of the Hilbert space in which $\ket \psi$ is defined it is always possible to write:
+\begin{equation}\label{eq:bipartitionsvd}
+\ket \psi = \sum_{\alpha, \, \beta} c_{\alpha, \, \beta} \ket{\alpha}_A \ket{\beta}_B
+\end{equation}
+If perform a SVD of the matrix $c$ in \cref{eq:bipartitionsvd}, we can write:
+\begin{equation}
+\ket \psi = \sum_{\alpha, \, \beta} \sum_{s_a} U_{\alpha, \, s_a} S_{s_a, \, s_a} V^\dagger_{s_a, \, \beta} \ket{\alpha}_A \ket{\beta}_B
+\end{equation}
+We can absorb $U$ and $V$ in $A$ and $B$ due to their orthonormality in those spaces write:
+\begin{equation}
+\ket \psi =  \sum_{s_a} s_a  \ket{\alpha}_A \ket{\beta}_B
+\end{equation}
+In this decoposition it is trivial to derive the reduced density matrix for the sub-system $A$ in \cref{eq:Apartition}:
+\begin{equation}\label{eq:canonical_rho_a}
+\rho_A =  \sum_{s_a} s^2_a  \left( \ket{\alpha} \bra{\alpha}\right)_A
+\end{equation}
+The von-Neumann entanglement entropy can be computed directly from here:
+
+\begin{equation}\label{eq:derived_entropy}
+S(\rho_A)=-Tr(\rho_A\log_2(\rho_A))= -\sum_a s^2_a\log_2 s^2_a
+\end{equation}
+
+\subsection{Canonical form}
+
+Fixing those matrices $M$ or, more generally, fixing $M$ such that the MPS satisfies certain relations is referred to as \textit{fixing a gauge}.
+Two particular gauge, called \textit{canonical forms} are particularly useful when computing expectation values of operators (i.e. the Hamiltonian $H$ of a quantum system). Those gauge consist into choosing the matrices $M$ such that the tensors $A^{(i)}$ satisfy the following relations:
+
+\begin{equation}\label{eq:left}
+\sum_{\beta=1}^D\sum_{s=1}^d \left(A^{[s](i)}_{\alpha, \, \beta}\right)^* A^{[s](i)}_{\beta, \, \gamma}= \delta_{\alpha, \, \gamma}  \, \end{equation}
+
+\begin{equation}\label{eq:right}
+\sum_{\beta=1}^D\sum_{s=1}^d A^{[s](i)}_{\alpha, \, \beta} \left(A^{[s](i)}_{\beta, \, \gamma}\right)^* = \delta_{\alpha, \, \gamma} \,
+\end{equation}
+If a MPS satisfies the relation in \cref{eq:left} it is called to be in the \textit{left canonical form}. If a MPS satisfies the relation in \cref{eq:right} it is called to be in the \textit{right canonical form}.
+
+There is also a very useful notation introduced by \cite{Vidal_2003} that highlights the singular values of the matrices of a MPS:
+
+\begin{equation} \label{eq:vidal_form}
+\ket \psi = \sum_{s_1, \, ... \, , \, s_N} U^{s_1} S_{1}U^{s_2} S_{2} \, ... \, U^{s_N} S_{N} \ket{s_1, \, ... \, , \, s_N}
+\end{equation}
+
+
+
+\subsection{Computation of the Von-Neumann entropy in the MPS formalism}
+
+Let us suppose we have a spin chain of local Physical dimension $d$ and $N$ sites described by a MPS in the  \textit{left canonical form}. The partition function $\rho$ is defined as:
+\begin{equation}
+\rho = \sum^d_{s_1, \, ... \, , s_N }\sum^d_{s'_1, \, ... \, , s'_N }Tr\left[ M^{1,\, s_1, \, s'_1} M^{2, \, s_2,\, s'_2} \, ... \, M^{N, \, s_N,\, s'_N} \right]\ket{s_1, \, ... \, , s_N} \bra{s'_1, \, ... \, , s'_N}
+\end{equation}
+where:
+\begin{equation}
+M^{i,\, s_i, \, s'_i} = A^{[s_i](i)} \otimes \left(A^{[s'_i](i)} \right)^\dag
+\end{equation}
+We now partition the system in two sub-system $A$ and $B$. $A$ includes all the sites up to \textit{k} and $B$ its complementary.
+$\rho(A)$, defined as in \cref{eq:Apartition}, can now be written as:
+
+\begin{equation}
+\tilde{\rho}_A^{[l]}=Tr_B(\rho)= \sum^d_{s_1, \, ... \, , s_l }\sum^d_{s'_1, \, ... \, , s'_l }  A^{1, \, s_1} ... A^{l, \, s_l} \rho^{(l)}_{[A]}  \left( A^{1, \, s'_1} \right)^\dag ... \left(A^{l, \, s'_l}\right)^\dag \ket{s_1, \, ... \, , s_l} \bra{s'_1, \, ... \, , s'_l}
+\end{equation}
+where $\rho^l_{[A]}$ is defined as:
+\begin{equation}\label{eq:reduced_definition}
+\rho^{(l)}_{[A]}= \sum^d_{s_{l+1}, \, ... \, , s_N }\sum^d_{s'_{l+1}, \, ... \, , s'_N }  A^{l+1, \, s_{l+1}} ... A^{N, \, s_N}  \left( A^{l+, \, s'_{l+1}} \right)^\dag ... \left(A^{N, \, s'_N}\right)^\dag
+\end{equation}
+\cref{eq:reduced_definition} denotes a recursive relation:
+
+\begin{equation}
+\rho^{(l+1)}_{[A]} = A^{l+1, \, s_{l+1}} \rho^{(l)}_{[A]} \left( A^{l+, \, s'_{l+1}} \right)^\dag
+\end{equation}
+
+
+We can always rewrite a MPS such in the form of \cref{eq:vidal_form}. From this form it is trivial to derive the von-Neumann entanglement entropy in the same fashion as in \cref{eq:derived_entropy}. We just need to identify:
+\begin{align}
+\ket {\alpha}_A = \sum_{s_1, \, ... \, , \, s_l} U^{s_1} S_{1}U^{s_2} S_{2} \, ... \,S_{l-1} U^{s_l}  \ket{s_1, \, ... \, , \, s_l}\\
+\ket {\alpha}_B = \sum_{s_1, \, ... \, , \, s_N} U^{s_{l+1}} S_{{l+1}}U^{s_{l+2}} S_{l+2} \, ... \, U^{s_N} S_{N} \ket{s_{l+1}, \, ... \, , \, s_N}
+\end{align}
+At this point we can write:
+
+\begin{equation}\label{eq:canonical_rho_a}
+\rho_A =  \sum_{s_a} s^2_a  \left( \ket{\alpha} \bra{\alpha}\right)_A= \sum_a \left( S_{l} \right)_{a, \,a} \left( \ket{\alpha} \bra{\alpha}\right)_A
+\end{equation}
+
+Since we have the coefficients of the reduced density matrix $\rho_A$ we can compute the von-Neumann entropy as:
+
+
+\begin{equation}\label{eq:derived_entropy}
+S(\rho_A)=-Tr(\rho_A\log_2(\rho_A))= -\sum_a \left( S_{l} \right)_{a, \,a}^2 \log_2 \left( S_{l} \right)_{a, \,a}^2
+\end{equation}
+
+
 
 
 \end{document}

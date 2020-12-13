@@ -116,3 +116,7 @@ venv.bak/
 *.aux
 *.fls
 *.fdb_latexmk
+*.dvi
+*.out
+*.blg
+*.bbl
