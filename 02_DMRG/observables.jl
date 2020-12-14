@@ -157,7 +157,6 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
     operator_7=kron(kron(kron(u,pm),pp),pm)
     operator_8=kron(kron(kron(u,pp),u),u)
 
-
     operator_5_dag=kron(kron(kron(pp,u),pp),pm)
     operator_6_dag=kron(kron(kron(pm,u),u),u)
 
@@ -186,35 +185,35 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
     MN2[3,:,D,:] = operator_8_dag
 
 
-    mpo= [ M1[1:1,:,:,:] ]
-
     if sublattice=="A"
+        mpo= [ M1[1:1,:,:,:] ]
         for site = 2:N-1;
             if site % 2 == 0
-                push!(mpo, M1[:,:,:,:])
-            else
                 push!(mpo, M2[:,:,:,:])
+            else
+                push!(mpo, M1[:,:,:,:])
             end
         end
 
         if (N-1)%2==0
-            push!(mpo, MN1[:,:,D:D,:])
-        else
             push!(mpo, MN2[:,:,D:D,:])
+        else
+            push!(mpo, MN1[:,:,D:D,:])
         end
     elseif sublattice=="B"
+        mpo= [ M2[1:1,:,:,:] ]
         for site = 2:N-1;
             if site % 2 == 0
-                push!(mpo, M2[:,:,:,:])
-            else
                 push!(mpo, M1[:,:,:,:])
+            else
+                push!(mpo, M2[:,:,:,:])
             end
         end
 
         if (N-1)%2 == 0
-            push!(mpo, MN2[:,:,D:D,:])
-        else
             push!(mpo, MN1[:,:,D:D,:])
+        else
+            push!(mpo, MN2[:,:,D:D,:])
         end
     else
         print("\nI dont know this wired sublattice called: '", sublattice, "'\n")
@@ -223,8 +222,6 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
     end
 
     # construct MPO
-
-
     return mpo
 end
 

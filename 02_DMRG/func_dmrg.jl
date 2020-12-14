@@ -300,6 +300,7 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     Oflip = measure_mpo!(A,Oflip_mpo)
     Oflipp = measure_mpo!(A, Oflipp_mpo)
     entropy = Von_Neumann_entropy(A)
+
     E[2], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
     println("Number_Plaquettes\tcoupling\tchemical\ttheta\tbond_dimension\tEnergy_GS\twinding_number\teA\teB\tOflip\tOflipp\tentropy")
     println("$(N - 1)\t$coupling_interaction\t$chemical_potential\t$theta\t$D\t$(E[counter-1])\t$(real(sum(winding_number)))\t$(real(EA))\t$(real(EB))\t$(real(Oflip))\t$(real(Oflipp))\t$(real(entropy))")
