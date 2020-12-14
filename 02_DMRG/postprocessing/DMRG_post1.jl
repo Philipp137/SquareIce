@@ -1,69 +1,49 @@
 using DataFrames
 using Plots
 using LaTeXStrings
+using CSV
 
 ## READ Data
-dir="/home/phil/develop/SquareIce/small_check_chess/"
-#dir="~/Desktop/tensor_network/SquareIce/small_check_chess/"
-#data=readtable(fname, separator=' ')
-data=[]
-lambda=0;Lsize=0
-counter = 0
-for (root, dirs, files) in walkdir(dir)
-    global data
-    global df
-    global counter
-    for file in files
-        fpath=joinpath.(root, file)
-        if file == "scaling" && filesize(fpath)>0 # read only nonempty file called scaling
-            println("reading: ", fpath)
-            ## read data from file
-            df=readtable(fpath, separator=' ')
-            ## insert lattice size
-            m=match(r"/L(?<Lsize>\d+)",root)
-            if m===nothing
-                df.Lsize = 0
-            else
-                insert!(df,1,parse(Int64,m[:Lsize]),:Lsize)
-            end
-            ## append the data or create new array
-            if counter==0
-                data =DataFrame(df[size(df,1),:])
-            else
-                data=push!(data,df[size(df,1),:])
-                # data = last(df)
-            end
-            counter += 1
-        else
-            #println(df)
-        end
-    end
-end
-#return df
+file="/home/phil/develop/SquareIce/06_data/01_DMRG/20201213_DMRG_ED_comparison_EA_EB_Entropy/dmrg.dat"
+df=CSV.File(file)
 
 
 ## %% Plot chess operators
-p=[plot(),plot(),plot()]
+p=[plot(),plot(),plot(),plot()]
 gr() # Set the backend to Plotly
-for L in unique(data.Lsize)
-    println("plotting chess L=", L)
-    Ma=data[data.Lsize.==L,:].coupling,data[data.Lsize.==L,:].chess_up
-    Mb=data[data.Lsize.==L,:].coupling,data[data.Lsize.==L,:].chess_down
-    plot!(p[1],Ma, label=string("L=",string(L)), ls=(:none),marker = (:dot))
-    plot!(p[2],Mb, label=string("L=",string(L)), ls=(:none),marker = (:dot))
-    if L==60
-        plot!(p[3],Ma[1],Ma[2].^2 + Mb[2].^2,label=string("L=",string(L)), ls=(:none),marker = (:cross,))
-    elseif L==20
-        plot!(p[3],Ma[1],Ma[2].^2 + Mb[2].^2,label=string("L=",string(L)),ls=(:none),marker = (:hexagon))
-    else
 
-    end
+for L = unique(df.Number_Plaquettes)
+    println("plotting chess L=", L)
+    Index=findall(df.Number_Plaquettes.==L)
+    Oflip=[(df[i].coupling,df[i].Oflip) for i in Index]
+    Oflipp=[(df[i].coupling,df[i].Oflipp) for i in Index]
+    winding=[(df[i].coupling,df[i].winding_number) for i in Index]
+    E=[(df[i].coupling,df[i].Energy_GS) for i in Index]
+
+    plot!(p[1],Oflip, label=string("L=",string(L)),marker="+")
+    plot!(p[2],Oflipp, label=string("L=",string(L)), marker="x")
+    plot!(p[3],winding, label=string("L=",string(L)), marker="x")
+    plot!(p[4],E, label=string("L=",string(L)), marker="x")
 end
 xlabel!("\$\\lambda\$")
-ylabel!(p[1],"\$<{M}_A>\$")
-ylabel!(p[2],"\$<{M}_B>\$")
-ylabel!(p[3],"\$<{M}_A^2+{M}_B^2>\$")
-plot(p[1],p[2],p[3],layout=(3,1),legend=:bottomleft)
-current()
+ylabel!(p[1],"\$<{O}_\\mathrm{flip}>\$")
+ylabel!(p[2],"\$<{O}_\\mathrm{flipp}>\$")
+ylabel!(p[3],"\$<{W}_y>\$")
+ylabel!(p[3],"\$<E>\$")
+#ylabel!(p[3],"\$<{M}_A^2+{M}_B^2>\$")
+plot(p[1],p[2],p[3],p[4],layout=(4,1), legend=:bottomleft)
+#current()
 # save figure
-savefig(string( dir,"/../notes/images/chessop.pdf"))
+savefig("01_notes/images/20201214_Oflip.pdf")
+
+p=plot()
+gr()
+for k =1:10
+    entropy = (0:df[k].Number_Plaquettes,[parse(Float64,x) for x in split(df[k].entropy[2:end-1],",")])
+    plot!(p,entropy,label=string("lambda=",string(df[k].coupling)))
+end
+xlabel!("\$x\$")
+ylabel!("entropy ")
+plot(p, legend=:bottomleft)
+current()
+savefig("01_notes/images/20201214_entropy.pdf")
