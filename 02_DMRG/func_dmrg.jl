@@ -1,4 +1,4 @@
-using LinearAlgebra, TensorOperations, KrylovKit
+using LinearAlgebra, TensorOperations, KrylovKit, Printf
 
 randisometry(T, d1, d2) = d1 >= d2 ? Matrix(qr!(randn(T, d1, d2)).Q) : Matrix(lq!(randn(T, d1, d2)).Q)
 randisometry(d1, d2) = randisometry(Float64, d1, d2)
@@ -302,8 +302,8 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     entropy = Von_Neumann_entropy(A)
 
     E[2], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
-    println("Number_Plaquettes\tcoupling\tchemical\ttheta\tbond_dimension\tEnergy_GS\twinding_number\teA\teB\tOflip\tOflipp\tentropy")
-    println("$(N - 1)\t$coupling_interaction\t$chemical_potential\t$theta\t$D\t$(E[counter-1])\t$(real(sum(winding_number)))\t$(real(EA))\t$(real(EB))\t$(real(Oflip))\t$(real(Oflipp))\t$(real(entropy))")
+    @printf("%4s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s \n","Lx","lambda","chemical", "theta", "bond_dime","Energy_GS","winding","eA","eB","Oflip","Oflipp")
+    @printf("%4d %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f \n",(N - 1),coupling_interaction,chemical_potential,theta,D,(E[counter-1]),(real(sum(winding_number))),(real(EA)),(real(EB)),(real(Oflip)),(real(Oflipp)))
     E[1] = E[2] + 1.
     if verbose
         println("$N  $D    $(E[2])   ")
@@ -327,7 +327,7 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
         Oflipp = measure_mpo!(A, Oflipp_mpo)
         entropy = Von_Neumann_entropy(A)
         # print to console
-        println("$(N - 1)\t$coupling_interaction\t$chemical_potential\t$theta\t$D\t$(E[counter-1])\t$(real(sum(winding_number)))\t$(real(EA))\t$(real(EB))\t$(real(Oflip))\t$(real(Oflipp))\t$(real(entropy))")
+        @printf("%4d %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f \n",(N - 1),coupling_interaction,chemical_potential,theta,D,(E[counter-1]),(real(sum(winding_number))),(real(EA)),(real(EB)),(real(Oflip)),(real(Oflipp)))
         if verbose
             println("$N  $D    $(E[counter])   ")
         end
