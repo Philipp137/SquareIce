@@ -294,16 +294,22 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     Oflip_mpo = operator_Oflip(N)
     EA_mpo=operator_sublattice_energy(N,"A")
     EB_mpo=operator_sublattice_energy(N,"B")
+    MA_mpo = chess_operator_down( N )
+    MB_mpo = chess_operator_up( N )
     # measure operators
     EA    = measure_mpo!(A,EA_mpo)
     EB    = measure_mpo!(A,EB_mpo)
+    MA    = measure_mpo!(A,MA_mpo)
+    MB    = measure_mpo!(A,MB_mpo)
     Oflip = measure_mpo!(A,Oflip_mpo)
     Oflipp = measure_mpo!(A, Oflipp_mpo)
     entropy = Von_Neumann_entropy(A)
 
     E[2], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
-    @printf("%4s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s \n","Lx","lambda","chemical", "theta", "bond_dime","Energy_GS","winding","eA","eB","Oflip","Oflipp")
-    @printf("%4d %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f \n",(N - 1),coupling_interaction,chemical_potential,theta,D,(E[counter-1]),(real(sum(winding_number))),(real(EA)),(real(EB)),(real(Oflip)),(real(Oflipp)))
+    @printf("%4s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n","Lx","lambda","chemical", "theta", "bond_dim ","Energy_GS","winding","eA","eB","MA","MB","Oflip","Oflipp")
+    @printf("%4d %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f \n",(N - 1),
+            coupling_interaction,chemical_potential,theta,D,(E[counter-1]),(real(sum(winding_number))),
+            (real(EA)),(real(EB)),(real(MA)),(real(MB)),(real(Oflip)),(real(Oflipp)))
     E[1] = E[2] + 1.
     if verbose
         println("$N  $D    $(E[2])   ")
@@ -323,11 +329,15 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
         winding_number = deleteat!(winding_number, N)
         EA    = measure_mpo!(A,EA_mpo)
         EB    = measure_mpo!(A,EB_mpo)
+        MA    = measure_mpo!(A,MA_mpo)
+        MB    = measure_mpo!(A,MB_mpo)
         Oflip = measure_mpo!(A,Oflip_mpo)
         Oflipp = measure_mpo!(A, Oflipp_mpo)
         entropy = Von_Neumann_entropy(A)
         # print to console
-        @printf("%4d %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f \n",(N - 1),coupling_interaction,chemical_potential,theta,D,(E[counter-1]),(real(sum(winding_number))),(real(EA)),(real(EB)),(real(Oflip)),(real(Oflipp)))
+        @printf("%4d %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f  %10f %10f\n",(N - 1),
+                coupling_interaction,chemical_potential,theta,D,(E[counter-1]),
+                (real(sum(winding_number))),(real(EA)),(real(EB)),(real(MA)),(real(MB)),(real(Oflip)),(real(Oflipp)))
         if verbose
             println("$N  $D    $(E[counter])   ")
         end
