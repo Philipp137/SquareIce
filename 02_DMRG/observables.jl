@@ -135,7 +135,7 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
     pm = [0. 0.; 0. 1.]
 
     s=16
-    D = 4
+    D = 5
     M1 = zeros(D, s, D, s) ;
     MN1 = zeros(D, s, D, s) ;
 
@@ -167,20 +167,20 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
 
     # first plaquette
     M1[1,:,2,:] = operator_5
-    M1[2,:,D,:] = operator_6
+    M2[2,:,D,:] = operator_6
 
     M1[1,:,3,:] = operator_5_dag
-    M1[3,:,D,:] = operator_6_dag
+    M2[3,:,D,:] = operator_6_dag
 
     MN1[2,:,D,:]  = operator_6
     MN1[3,:,D,:] = operator_6_dag
 
     # second plaquette
     M2[1,:,2,:] = operator_7
-    M2[2,:,D,:] = operator_8
+    M1[2,:,D,:] = operator_8
 
     M2[1,:,3,:] = operator_7_dag
-    M2[3,:,D,:] = operator_8_dag
+    M1[3,:,D,:] = operator_8_dag
 
     MN2[2,:,D,:] = operator_8
     MN2[3,:,D,:] = operator_8_dag
