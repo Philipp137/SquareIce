@@ -306,10 +306,10 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     entropy = Von_Neumann_entropy(A)
 
     E[2], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
-    @printf("%4s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n","Lx","lambda","chemical", "theta", "bond_dim ","Energy_GS","winding","eA","eB","MA","MB","Oflip","Oflipp")
-    @printf("%4d %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f \n",(N - 1),
-            coupling_interaction,chemical_potential,theta,D,(E[counter-1]),(real(sum(winding_number))),
-            (real(EA)),(real(EB)),(real(MA)),(real(MB)),(real(Oflip)),(real(Oflipp)))
+    @printf("%4s %6s %8s %5s %5s %10s %10s %10s %10s %10s %10s %10s %10s\n","Lx","lambda","chemical", "theta", "bondD ","Energy_GS","winding","eA","eB","MA","MB","Oflip","Oflipp")
+    # @printf("%4d %6.2f %8.2f %5.2f %5d %10f %10f %10f %10f %10f %10f %10f %10f \n",(N - 1),
+    #         coupling_interaction,chemical_potential,theta,D,(E[counter-1]),(real(sum(winding_number))),
+    #         (real(EA)),(real(EB)),(real(MA)),(real(MB)),(real(Oflip)),(real(Oflipp)))
     E[1] = E[2] + 1.
     if verbose
         println("$N  $D    $(E[2])   ")
@@ -335,7 +335,7 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
         Oflipp = measure_mpo!(A, Oflipp_mpo)
         entropy = Von_Neumann_entropy(A)
         # print to console
-        @printf("%4d %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f  %10f %10f\n",(N - 1),
+        @printf("%4d %6.2f %8.2f %5.2f %5d %10f %10f %10f %10f %10f %10f %10f %10f\n",(N - 1),
                 coupling_interaction,chemical_potential,theta,D,(E[counter-1]),
                 (real(sum(winding_number))),(real(EA)),(real(EB)),(real(MA)),(real(MB)),(real(Oflip)),(real(Oflipp)))
         if verbose

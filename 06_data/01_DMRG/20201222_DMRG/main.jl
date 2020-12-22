@@ -18,7 +18,6 @@ function dostuff(N ,  D , coupling)
     #mpo = mpoqlm(N, coupling=coupling );
     E, A, F, counter =   dmrgconvergence_in_D!(s, D, D_max, A, mpo);
     dmrgconvergence_in_D_and_measure_op!(coupling, chemical_potential,  theta, s, D, D_max, A, mpo);
-    println("\n")
 end
 
 
