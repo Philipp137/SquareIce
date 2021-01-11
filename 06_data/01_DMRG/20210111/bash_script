@@ -1,0 +1,1 @@
+ julia main.jl  41  160 -0.1  >> dmrg.log 
