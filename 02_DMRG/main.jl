@@ -8,7 +8,7 @@ include("src/io.jl")
 
 using Main.mpos: mpoqlm
 
-function dostuff(N ,  D , coupling, storage="./06_data/01_DMRG/")
+function dostuff(N ,  D , coupling, storage="./data/")
     s = 16
     D_max = 10*D
     A = randmps(N, s, D);
