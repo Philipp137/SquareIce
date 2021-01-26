@@ -269,7 +269,7 @@ end
 
 
 
-function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_potential  ,  theta  , s, D, D_max, A, M, F = nothing ;  verbose = false, kwargs...)
+function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_potential  ,  theta  , s, D0, D_max, A, M, F = nothing ;  verbose = false, kwargs...)
     N = length(A)
 
     A = randmps(N, s, D);
@@ -322,9 +322,9 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
 
     #println("Number_Plaquettes\ncoupling\nchemical\ntheta\nBond_dimention       Energy_GS                        winding_number                 flipp ")
 
-
+    D = D0
     while  abs(E[counter] - E[counter - 1]) > conv
-        D = 2 * D
+        D = D * D0
         counter += 1
         E[counter], A, F = dmrg2sweep!(A, M ; verbose = false, truncdim = D , truncerr = 1e-10)
         E[counter], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
