@@ -12,7 +12,7 @@ function dostuff(N ,  D , coupling, mu; storage="./data/")
     s = 16
     D_max = 10*D
     A = randmps(N, s, D);
-    chemical_potential = mu
+    chemical_potential = [0, mu]
     theta = 0.0
     mpo = mpoqlm(N, coupling=coupling , mu=chemical_potential , theta= theta);
     #mpo = mpoqlm(N, coupling=coupling );

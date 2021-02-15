@@ -103,32 +103,32 @@ function interaction_operators(Ly::Int=2, coupling = -1.)
 end
 
 
-function chemical_potential_operators(Ly::Int=2, mu=-1)
+function chemical_potential_operators(Ly::Int=2, mu=[1,0])
 
     if Ly == 2
         ops=[
-            kron(kron(kron(sz,u),u),u),
-            kron(kron(kron(u,sz),u),u),
-            kron(kron(kron(u,u),sz),u),
-            kron(kron(kron(u,u),u),sz)
+            kron(kron(kron(sz,u),u),u) * mu[2],
+            kron(kron(kron(u,sz),u),u) * mu[2],
+            kron(kron(kron(u,u),sz),u) * mu[1],
+            kron(kron(kron(u,u),u),sz) * mu[1]
             ]
     elseif Ly == 3
         ops=[
-            kron(kron(kron(kron(kron(sz,u),u),u),u),u),
-            kron(kron(kron(kron(kron(u,sz),u),u),u),u),
-            kron(kron(kron(kron(kron(u,u),sz),u),u),u),
-            kron(kron(kron(kron(kron(u,u),u),sz),u),u),
-            kron(kron(kron(kron(kron(u,u),u),u),sz),u),
-            kron(kron(kron(kron(kron(u,u),u),u),u),sz)
+            kron(kron(kron(kron(kron(sz,u),u),u),u),u)*mu[2],
+            kron(kron(kron(kron(kron(u,sz),u),u),u),u)*mu[2],
+            kron(kron(kron(kron(kron(u,u),sz),u),u),u)*mu[2],
+            kron(kron(kron(kron(kron(u,u),u),sz),u),u)*mu[1],
+            kron(kron(kron(kron(kron(u,u),u),u),sz),u)*mu[1],
+            kron(kron(kron(kron(kron(u,u),u),u),u),sz)*mu[1]
             ]
     else
         error("Ly either 2 or 3")
     end
-    return mu*ops
+    return ops
 end
 
 
-function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=-1. , theta= 0.)
+function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=[-1.,0] , theta= 0.)
 
     Nlinks = Ly * 2
     Nstates = 2^(Nlinks) # number of states for one chain element
@@ -165,7 +165,7 @@ function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=-1. , theta= 0.)
     # chemical potential
     mu_ops    = chemical_potential_operators(Ly, mu)
 
-    M[1,:,D,:] = sum(mu_ops[Ly+1:end])
+    M[1,:,D,:] = sum(mu_ops)
 
     # Plaquette Terms
     for ip = 1:Nlinks;
