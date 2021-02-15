@@ -8,11 +8,11 @@ include("src/io.jl")
 
 using Main.mpos: mpoqlm
 
-function dostuff(N ,  D , coupling; storage="./data/")
+function dostuff(N ,  D , coupling, mu; storage="./data/")
     s = 16
     D_max = 10*D
     A = randmps(N, s, D);
-    chemical_potential = 0.0
+    chemical_potential = mu
     theta = 0.0
     mpo = mpoqlm(N, coupling=coupling , mu=chemical_potential , theta= theta);
     #mpo = mpoqlm(N, coupling=coupling );
@@ -24,4 +24,4 @@ end
 
 
 
-dostuff(parse(Int, ARGS[1]) , parse(Int, ARGS[2]) , parse(Float64, ARGS[3]))
+dostuff(parse(Int, ARGS[1]) , parse(Int, ARGS[2]) , parse(Float64, ARGS[3]), parse(Float64,ARGS[4]))
