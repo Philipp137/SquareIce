@@ -165,7 +165,7 @@ function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=[-1.,0] , theta= 0.)
     # chemical potential
     mu_ops    = chemical_potential_operators(Ly, mu)
 
-    M[1,:,D,:] = sum(mu_ops)
+    M[1,:,D,:] += sum(mu_ops)
 
     # Plaquette Terms
     for ip = 1:Nlinks;
@@ -179,10 +179,13 @@ function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=[-1.,0] , theta= 0.)
         M[5+k,:,D,:] = Inter_ops[2*k]
     end
 
-    MN[1,:,D,:] = sum(mu_ops[1:Ly])
+    # mpos on the last site in the chain:
+    MN[1,:,D,:] += sum(mu_ops[1:Ly])
 
-    MN[1,:,D,:] = Inter_ops[end] # last element of Inter_ops contains projector
+    # actually not needed since projector is not acting on a active link
+    #MN[1,:,D,:] = Inter_ops[end] # last element of Inter_ops contains projector
 
+    # interaction terms
     for ip = 1:Nlinks;
         MN[ip+1,:,D,:] = plq_ops[2*ip]
     end
