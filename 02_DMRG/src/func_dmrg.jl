@@ -324,7 +324,7 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
 
     D0 = D
     while  abs(E[counter] - E[counter - 1]) > conv
-        D = D * D0
+        D = D + D0
         counter += 1
         E[counter], A, F = dmrg2sweep!(A, M ; verbose = false, truncdim = D , truncerr = 1e-10)
         E[counter], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);

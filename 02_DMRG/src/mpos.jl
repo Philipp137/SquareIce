@@ -181,7 +181,7 @@ function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=[-1.,0] , theta= 0.)
 
     MN[1,:,D,:] = sum(mu_ops[1:Ly])
 
-    MN[1,:,D,:] = Inter_ops[end] # last element of Inter_ops contains projector
+ #   MN[1,:,D,:] += Inter_ops[end] # last element of Inter_ops contains projector
 
     for ip = 1:Nlinks;
         MN[ip+1,:,D,:] = plq_ops[2*ip]
