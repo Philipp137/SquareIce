@@ -284,7 +284,7 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
-    O = kron(kron(kron(u, u), sz), sz)
+    O = kron(kron(kron(sz, sz), u), u)
 
     winding_number = measure1siteoperator(A, O)
     winding_number = deleteat!(winding_number, N)
@@ -353,5 +353,53 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     end
     return E, A, F , counter
 #    return E , B, G
+
+end
+
+
+
+function measure_op!(coupling , mu  ,  theta  , s, D, D_max, A, M, F = nothing ;  verbose = false)
+    N = length(A)
+    max_sweep = 100
+    conv = 1.0e-8
+    E = Vector{Float64}(undef, max_sweep)
+    counter = 2
+    sp = [0. 1.; 0. 0.]
+    sm = [0. 0.; 1. 0.]
+    sz = [1. 0.; 0. -1.]
+    u = [1. 0.; 0. 1.]
+    pp = [1. 0.; 0. 0.]
+    pm = [0. 0.; 0. 1.]
+    O = kron(kron(kron(sz, sz), u), u)
+    winding_number = measure1siteoperator(A, O)
+    winding_number = deleteat!(winding_number, N)
+
+    # define operators
+    Oflipp_mpo = operator_flipp(N)
+    Oflip_mpo  = operator_Oflip(N)
+    EA_mpo     = operator_sublattice_energy(N,"A")
+    EB_mpo     = operator_sublattice_energy(N,"B")
+    MA_mpo     = chess_operator_down( N )
+    MB_mpo     = chess_operator_up( N )
+    MB2_mpo    = chess_operator_squared( N ) # square of the chess operator <M_B^2> = <M_B^4>
+    # measure operators
+    EA         = measure_mpo!(A,EA_mpo)
+    EB         = measure_mpo!(A,EB_mpo)
+    MA         = measure_mpo!(A,MA_mpo)
+    MB         = measure_mpo!(A,MB_mpo)
+    MB2        = measure_mpo!(A,MB2_mpo) # square of the chess operator <M_B^2> = <M_B^4>
+    Oflip      = measure_mpo!(A,Oflip_mpo)
+    Oflipp     = measure_mpo!(A, Oflipp_mpo)
+    charge     = measure_charge(A)
+    entropy    = Von_Neumann_entropy(A)
+    U4 = 1 - MB2/(3*MB2^2)
+    E[2], A, F = dmrg1sweep!( A, M; verbose = false);
+    @printf("%4s %6s %8s %5s %5s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n",
+            "Lx","lambda","mu_y", "theta", "bondD ","Energy_GS","winding","eA","eB",
+            "MA","MB","U4","Oflip","Oflipp", "charge")
+    @printf("%4d %6.2f %8.2f %5.2f %5d %10f %10f %10f %10f %10f %10f %10f %10f %10f %10f\n",(N - 1),
+                    coupling, mu[2],theta,D,(E[2]),
+                    (real(sum(winding_number))),(real(EA)),(real(EB)),(real(MA)),
+                    (real(MB)),(real(U4)),(real(Oflip)),(real(Oflipp)),real(charge))
 
 end
