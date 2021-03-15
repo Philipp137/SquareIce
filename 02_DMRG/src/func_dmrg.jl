@@ -213,6 +213,26 @@ function measure1siteoperator(A, O)
     return expval
 end
 
+function measure_two_NNN_site_operator(A, O_1, O_2, k_1, k_2)
+    N = length(A)
+    ρ = ones(eltype(A[1]), 1, 1)
+
+    for k = 1:N
+        if k == k_2
+            @tensor ρ[a, b] :=
+                ρ[a', b'] * A[k][b', s, b] * O_2[s', s] * conj(A[k][a', s', a])
+        elseif k == k_1
+            @tensor ρ[a, b] :=
+                ρ[a', b'] * A[k][b', s, b] * O_1[s', s] * conj(A[k][a', s', a])
+        else
+            @tensor ρ[a, b] := ρ[a', b'] * A[k][b', s, b] * conj(A[k][a', s, a])
+        end
+    end
+    eta = ones(eltype(A[1]), 1, 1)
+    @tensor v = scalar(ρ[a, b] * eta[a, b])
+
+    return v
+end
 
 
 function measure_mpo!(A, M )
@@ -267,7 +287,16 @@ function dmrgconvergence_in_D!(s, D, D_max , A, M , F = nothing ;  verbose = tru
 
 end
 
-
+function measure_correlator!(A, Operator, Lx)
+    offset = 3 # offset from the boundaries
+    corr =  Vector{Float64}(Lx-2*offset)
+    pos_1 = offset
+    for r = 1:Lx-2*offset
+        pos_2 = pos_1 + r
+        corr[r] = measure_two_NNN_site_operator(A, Operator, Operator, pos_1, pos_2)
+    end
+    @printf( "Corr %6.2f",corr)
+end
 
 function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_potential  ,  theta  , s, D, D_max, A, M, F = nothing ;  verbose = false, kwargs...)
     N = length(A)
@@ -288,7 +317,7 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
 
     winding_number = measure1siteoperator(A, O)
     winding_number = deleteat!(winding_number, N)
-
+    #measure_correlator!(A, O, N-1)
     # define operators
     Oflipp_mpo = operator_flipp(N)
     Oflip_mpo = operator_Oflip(N)
