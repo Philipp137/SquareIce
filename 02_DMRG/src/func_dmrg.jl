@@ -436,7 +436,7 @@ function measure_op!(coupling , mu  ,  theta  , s, D, D_max, A, M, F = nothing ;
 
     correlator ,distance = measure_correlator!(A, O, N-1)
     fname = string("winding_correlator.txt" )
-    @printf("Saving Corr-fun to: %s", fname)
+    @printf("Saving Corr-fun to: %s\n", fname)
     open(fname, "w") do io
         writedlm(io, [distance correlator])
     end
