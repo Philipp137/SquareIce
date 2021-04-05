@@ -1,4 +1,4 @@
-using LinearAlgebra, TensorOperations, KrylovKit, Printf
+using LinearAlgebra, TensorOperations, KrylovKit, Printf, DelimitedFiles
 
 randisometry(T, d1, d2) = d1 >= d2 ? Matrix(qr!(randn(T, d1, d2)).Q) : Matrix(lq!(randn(T, d1, d2)).Q)
 randisometry(d1, d2) = randisometry(Float64, d1, d2)
@@ -289,13 +289,15 @@ end
 
 function measure_correlator!(A, Operator, Lx)
     offset = 3 # offset from the boundaries
-    corr =  Vector{Float64}(Lx-2*offset)
+    corr =  Vector{Float64}(undef,Lx-2*offset)
+    distance =  Vector{Float64}(undef,Lx-2*offset)
     pos_1 = offset
     for r = 1:Lx-2*offset
-        pos_2 = pos_1 + r
-        corr[r] = measure_two_NNN_site_operator(A, Operator, Operator, pos_1, pos_2)
+         pos_2 = pos_1 + r
+         distance[r] = r
+         corr[r] = measure_two_NNN_site_operator(A, Operator, Operator, pos_1, pos_2)
     end
-    @printf( "Corr %6.2f",corr)
+    return corr, distance
 end
 
 function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_potential  ,  theta  , s, D, D_max, A, M, F = nothing ;  verbose = false, kwargs...)
@@ -317,7 +319,6 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
 
     winding_number = measure1siteoperator(A, O)
     winding_number = deleteat!(winding_number, N)
-    #measure_correlator!(A, O, N-1)
     # define operators
     Oflipp_mpo = operator_flipp(N)
     Oflip_mpo = operator_Oflip(N)
@@ -380,6 +381,8 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
             println("$N  $D    $(E[counter])   ")
         end
     end
+
+
     return E, A, F , counter
 #    return E , B, G
 
@@ -431,4 +434,10 @@ function measure_op!(coupling , mu  ,  theta  , s, D, D_max, A, M, F = nothing ;
                     (real(sum(winding_number))),(real(EA)),(real(EB)),(real(MA)),
                     (real(MB)),(real(U4)),(real(Oflip)),(real(Oflipp)),real(charge))
 
+    correlator ,distance = measure_correlator!(A, O, N-1)
+    fname = string("winding_correlator.txt" )
+    @printf("Saving Corr-fun to: %s", fname)
+    open(fname, "w") do io
+        writedlm(io, [distance correlator])
+    end
 end
