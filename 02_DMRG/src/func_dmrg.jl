@@ -254,7 +254,7 @@ function measure_mpo!(A, M )
 
 
 
-function dmrgconvergence_in_D!(s, D, D_max , A, M , F = nothing ;  verbose = true, kwargs...)
+function dmrgconvergence_in_D!(s, D, D_max ,  A, M , F = nothing ; Ly=2, verbose = true, kwargs...)
     N = length(A)
 
     A = randmps(N, s, D);
@@ -300,7 +300,11 @@ function measure_correlator!(A, Operator, Lx)
     return corr, distance
 end
 
-function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_potential  ,  theta  , s, D, D_max, A, M, F = nothing ;  verbose = false, kwargs...)
+function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_potential  ,  theta  , s, D, D_max, A, M, F = nothing ;   Ly=2, verbose = false, kwargs...)
+
+    if Ly == 3
+        return dmrgconvergence_Ly3!(coupling, chemical_potential,  theta, Nstates, D, D_max, A, mpo)
+    end
     N = length(A)
 
     A = randmps(N, s, D);
@@ -315,7 +319,8 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
-    O = kron(kron(kron(sz, sz), u), u)
+
+
 
     winding_number = measure1siteoperator(A, O)
     winding_number = deleteat!(winding_number, N)
@@ -328,10 +333,12 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     MB_mpo = chess_operator_up( N )
     MB2_mpo = chess_operator_squared( N ) # square of the chess operator <M_B^2> = <M_B^4>
     # measure operators
-    EA    = measure_mpo!(A,EA_mpo)
-    EB    = measure_mpo!(A,EB_mpo)
-    MA    = measure_mpo!(A,MA_mpo)
-    MB    = measure_mpo!(A,MB_mpo)
+    if Ly == 2
+        EA    = measure_mpo!(A,EA_mpo)
+        EB    = measure_mpo!(A,EB_mpo)
+        MA    = measure_mpo!(A,MA_mpo)
+        MB    = measure_mpo!(A,MB_mpo)
+    end
     MB2    = measure_mpo!(A,MB2_mpo) # square of the chess operator <M_B^2> = <M_B^4>
     Oflip = measure_mpo!(A,Oflip_mpo)
     Oflipp = measure_mpo!(A, Oflipp_mpo)
@@ -381,13 +388,72 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
             println("$N  $D    $(E[counter])   ")
         end
     end
-
-
     return E, A, F , counter
-#    return E , B, G
 
 end
 
+function dmrgconvergence_Ly3!(coupling_interaction ,chemical_potential  ,  theta  , s, D, D_max, A, M, F = nothing ;  verbose = false, kwargs...)
+    N = length(A)
+
+    A = randmps(N, s, D);
+
+    max_sweep = 100
+    conv = 1.0e-8
+    E = Vector{Float64}(undef, max_sweep)
+    counter = 2
+    sp = [0. 1.; 0. 0.]
+    sm = [0. 0.; 1. 0.]
+    sz = [1. 0.; 0. -1.]
+    u = [1. 0.; 0. 1.]
+    pp = [1. 0.; 0. 0.]
+    pm = [0. 0.; 0. 1.]
+
+    O = kron(kron(kron(kron(sz, sz), sz), u), u)
+
+
+    winding_number = measure1siteoperator(A, O)
+    winding_number = deleteat!(winding_number, N)
+    # define operators
+    charge = measure_charge(A)
+    entropy = Von_Neumann_entropy(A)
+
+    E[2], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
+    @printf("%4s %6s %8s %5s %5s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s\n",
+            "Lx","lambda","mu_y", "theta", "bondD ","Energy_GS","winding","eA","eB",
+            "MA","MB","U4","Oflip","Oflipp", "charge")
+    # @printf("%4d %6.2f %8.2f %5.2f %5d %10f %10f %10f %10f %10f %10f %10f %10f \n",(N - 1),
+    #         coupling_interaction,chemical_potential,theta,D,(E[counter-1]),(real(sum(winding_number))),
+    #         (real(EA)),(real(EB)),(real(MA)),(real(MB)),(real(Oflip)),(real(Oflipp)))
+    E[1] = E[2] + 1.
+    if verbose
+        println("$N  $D    $(E[2])   ")
+    end
+
+    #println("Number_Plaquettes\ncoupling\nchemical\ntheta\nBond_dimention       Energy_GS                        winding_number                 flipp ")
+
+    D0 = D
+    while  abs(E[counter] - E[counter - 1]) > conv
+        D = D + D0
+        counter += 1
+        E[counter], A, F = dmrg2sweep!(A, M ; verbose = false, truncdim = D , truncerr = 1e-10)
+        E[counter], A, F  = dmrgconvergence!(A, M, F  ; verbose = true);
+
+        # Measure
+        winding_number = measure1siteoperator(A, O)
+        winding_number = deleteat!(winding_number, N)
+
+        # print to console
+        @printf("%4d %6.2f %8.2f %5.2f %5d %10f %10f \n",
+                (N - 1),
+                coupling_interaction,chemical_potential[2],theta,D,(E[counter-1]),
+                (real(sum(winding_number))))
+        if verbose
+            println("$N  $D    $(E[counter])   ")
+        end
+    end
+    return E, A, F , counter
+
+end
 
 
 function measure_op!(coupling , mu  ,  theta  , s, D, D_max, A, M, F = nothing ;  verbose = false)

@@ -2,7 +2,7 @@ using LinearAlgebra, TensorOperations, KrylovKit
 
 
 
-function operator_flipp(N::Int;   coupling=1. )
+function operator_flipp(N::Int;   coupling=1., Ly = 2 )
 
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
@@ -128,7 +128,7 @@ end
 
 
 # 1.eA and eB is the same as Oflip but measured only on a single sub-lattice.
-function operator_sublattice_energy(N::Int, sublattice="A" )
+function operator_sublattice_energy(N::Int, sublattice="A")
 
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
@@ -142,8 +142,9 @@ function operator_sublattice_energy(N::Int, sublattice="A" )
     M2 = zeros(D, s, D, s) ;
     MN2 = zeros(D, s, D, s) ;
 
-
     I= operator_2=kron(kron(kron(u,u),u),u)
+
+
 
 
     M1[1,:,1,:] = I ; M1[ D,:,D,:] = I
