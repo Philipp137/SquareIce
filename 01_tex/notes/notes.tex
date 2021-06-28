@@ -345,12 +345,12 @@ Magnetic field angle $\theta$       & 0 & $\theta_k =\frac{\pi}{4}k, k = 0,1,\do
 
 \section{Von-Neumann entanglement entropy}
 
-Let us suppose we have the ground state of a gapped model on a lattice $V$ described by the density matrix $\rho$. The von  Neumann entropy is defined as:
+Let us suppose we have the ground state of a gapped model on a lattice $V$ described by the density matrix $\rho$. The von-Neumann entropy is defined as:
 \begin{equation}
 S(\rho)=-Tr(\rho\log(\rho))
 \end{equation}
-The entropy of the ground-state is zero since it is a product state. We can not state this for subset of the system.
-We define a subset $A$ of $V$ suche that $B:=V / A $. We define the reduced density matrix of the sub-system as:
+At zero temperature, the entropy of the ground state is zero for any gapped Hamiltonian \cite{Eisert_2010}. We can not state this for subset of the system.
+We define a subset $A$ of $V$ such that $B:=V / A $. We define the reduced density matrix of the sub-system as:
 \begin{equation} \label{eq:Apartition}
 \rho_A=Tr_B(\rho)
 \end{equation}
@@ -359,9 +359,12 @@ We define the von-Neumann entropy of the subsystem $A$ as:
 S(\rho_A)=-Tr(\rho_A\log_2(\rho_A))
 \end{equation}
 Now, the entropy $S(\rho_A)$ is null if the subsystems $A$ and $B$ are product states. This is not true if there is quantum correlations between $A$ and $B$. Quantum correlations can lead to non-vanishing values of $S(\rho_A)$. In fact, the von-Neumann entropy is a index of the entanglement for pure states. This is also why the von-Neumann entropy is also called entanglement entropy.
+
+
+
 \section{Matrix product states}
 
-We define the wavefunction of a quantum state as \cite{Schollw_ck_2011}:
+We define the wave-function of a quantum state as \cite{Schollw_ck_2011}:
 
 \begin{equation}
 \ket \psi = \sum{j_1,...,j_n} c_{j_1,...,j_n}  \ket{j_1} \otimes ... \otimes \ket{j_n}
@@ -458,10 +461,9 @@ where $\rho^l_{[A]}$ is defined as:
 We can always rewrite a MPS such in the form of \cref{eq:vidal_form}. From this form it is trivial to derive the von-Neumann entanglement entropy in the same fashion as in \cref{eq:derived_entropy}. We just need to identify:
 \begin{align}
 \ket {\alpha}_A = \sum_{s_1, \, ... \, , \, s_l} U^{s_1} S_{1}U^{s_2} S_{2} \, ... \,S_{l-1} U^{s_l}  \ket{s_1, \, ... \, , \, s_l}\\
-\ket {\alpha}_B = \sum_{s_1, \, ... \, , \, s_N} U^{s_{l+1}} S_{{l+1}}U^{s_{l+2}} S_{l+2} \, ... \, U^{s_N} S_{N} \ket{s_{l+1}, \, ... \, , \, s_N}
+\ket {\alpha}_B = \sum_{s_{l+1}, \, ... \, , \, s_N} U^{s_{l+1}} S_{{l+1}}U^{s_{l+2}} S_{l+2} \, ... \, U^{s_N} S_{N} \ket{s_{l+1}, \, ... \, , \, s_N}
 \end{align}
 At this point we can write:
-
 \begin{equation}\label{eq:canonical_rho_a}
 \rho_A =  \sum_{s_a} s^2_a  \left( \ket{\alpha} \bra{\alpha}\right)_A= \sum_a \left( S_{l} \right)_{a, \,a} \left( \ket{\alpha} \bra{\alpha}\right)_A
 \end{equation}
