@@ -320,7 +320,7 @@ function dmrgconvergence_in_D_and_measure_op!(coupling_interaction ,chemical_pot
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
 
-
+    O = kron(kron(kron(sz, sz), u), u)
 
     winding_number = measure1siteoperator(A, O)
     winding_number = deleteat!(winding_number, N)
