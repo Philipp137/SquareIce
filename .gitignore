@@ -120,3 +120,6 @@ venv.bak/
 *.out
 *.blg
 *.bbl
+
+# data files
+*.jld2
