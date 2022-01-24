@@ -128,7 +128,7 @@ function chemical_potential_operators(Ly::Int=2, mu=[1,0])
 end
 
 
-function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=[-1.,0] , theta= 0.)
+function mpoqlm(Lx::Int; Ly=2, coupling=-1. , mu=[-1.,0] , theta= 0.)
 
     Nlinks = Ly * 2
     Nstates = 2^(Nlinks) # number of states for one chain element
@@ -142,6 +142,10 @@ function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=[-1.,0] , theta= 0.)
             error("Ly either 2 or 3")
     end
 
+    # reduce the number of operators if lambda is 0
+    if abs(coupling) <1e-14
+        D = D - Nlinks
+    end
     # initialice
     M = zeros(D, Nstates, D, Nstates) ;
     MN = zeros(D, Nstates, D, Nstates) ;
@@ -167,18 +171,21 @@ function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=[-1.,0] , theta= 0.)
 
     M[1,:,D,:] = sum(mu_ops)
 
+
     # Plaquette Terms
     for ip = 1:Nlinks;
         M[1,:,ip+1,:] = plq_ops[2*ip-1]
         M[ip+1,:,D,:] = plq_ops[2*ip]
     end
 
-    # Interaction terms
-    for k = 1:Nlinks;
-        M[1,:,5+k,:] = Inter_ops[2*k-1]
-        M[5+k,:,D,:] = Inter_ops[2*k]
-    end
 
+    # Interaction terms
+    if abs(coupling) > 1e-14 # only required if lambda is larger then 0
+        for k = 1:Nlinks;
+            M[1,:,5+k,:] = Inter_ops[2*k-1]
+            M[5+k,:,D,:] = Inter_ops[2*k]
+        end
+    end
     MN[1,:,D,:] = sum(mu_ops[1:Ly])
 
  #   MN[1,:,D,:] += Inter_ops[end] # last element of Inter_ops contains projector
@@ -188,14 +195,15 @@ function mpoqlm(N::Int; Ly=2, coupling=-1. , mu=[-1.,0] , theta= 0.)
     end
 
     # Interaction terms
-    for k = 1:Nlinks;
-        MN[5+k,:,D,:] = Inter_ops[2*k]
+    if abs(coupling) > 1e-14 # only required if lambda is larger then 0
+        for k = 1:Nlinks;
+            MN[5+k,:,D,:] = Inter_ops[2*k]
+        end
     end
-
     # Construct Matrix Product Operator
     mpo= [ M[1:1,:,:,:] ]
 
-    for site = 2:N-1;
+    for site = 2:Lx-1;
         push!(mpo, M[:,:,:,:])
     end
 
