@@ -468,7 +468,7 @@ function measure_op!(coupling , mu  ,  theta  , s, D, D_max, A, M, F = nothing ;
     u = [1. 0.; 0. 1.]
     pp = [1. 0.; 0. 0.]
     pm = [0. 0.; 0. 1.]
-    O = kron(kron(kron(sz, sz), u), u)
+    O = kron(kron(kron(sz, u), u), u) + kron(kron(kron(u, sz), u), u) 
     winding_number = measure1siteoperator(A, O)
     winding_number = deleteat!(winding_number, N)
 
