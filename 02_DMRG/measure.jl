@@ -1,4 +1,3 @@
-
 using LinearAlgebra, TensorOperations, KrylovKit
 
 include("src/mpos.jl")
@@ -8,8 +7,8 @@ include("src/io.jl")
 
 using Main.mpos: mpoqlm
 
-function measure(;config_name="",Lx= 0 , BondD=0 , Ly=0,theta = 0.0, coupling=0.0, mu=0.0, prefix = "SQ")
-
+function measure(;config_name="",Lx= 0 , BondD=0 , Ly=0, coupling=0.0, mu=0.0, prefix = "SQ")
+     theta = 0.0
      if config_name != ""
          dict  =load_configuration( config_name)
      else
