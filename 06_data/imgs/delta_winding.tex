@@ -1,0 +1,143 @@
+% This file was created with tikzplotlib v0.9.15.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+\definecolor{color3}{rgb}{0.83921568627451,0.152941176470588,0.156862745098039}
+\definecolor{color4}{rgb}{0.580392156862745,0.403921568627451,0.741176470588235}
+\definecolor{color5}{rgb}{0.549019607843137,0.337254901960784,0.294117647058824}
+
+\begin{axis}[
+height=\figureheight,
+legend cell align={left},
+legend style={
+  fill opacity=0.8,
+  draw opacity=1,
+  text opacity=1,
+  at={(0.97,0.03)},
+  anchor=south east,
+  draw=white!80!black
+},
+tick align=outside,
+tick pos=left,
+width=\figurewidth,
+x grid style={white!69.0196078431373!black},
+xlabel={\(\displaystyle \mu\)},
+xmin=0.22, xmax=1.54,
+xtick style={color=black},
+y grid style={white!69.0196078431373!black},
+ylabel={\(\displaystyle \Delta W_x\)},
+ymin=0.53660105, ymax=1.73414795,
+ytick style={color=black}
+]
+\path [draw=none, fill=white!50.1960784313725!black, fill opacity=0.2]
+(axis cs:0.22,0)
+--(axis cs:0.22,1)
+--(axis cs:0.46,1)
+--(axis cs:0.46,0)
+--cycle;
+\path [draw=none, fill=white!50.1960784313725!black, fill opacity=0.1]
+(axis cs:0.46,0)
+--(axis cs:0.46,1)
+--(axis cs:0.86,1)
+--(axis cs:0.86,0)
+--cycle;
+\path [draw=none, fill=white!50.1960784313725!black, fill opacity=0.2]
+(axis cs:0.86,0)
+--(axis cs:0.86,1)
+--(axis cs:1.54,1)
+--(axis cs:1.54,0)
+--cycle;
+\path [draw=black, draw opacity=0.3, semithick, dash pattern=on 5.55pt off 2.4pt]
+(axis cs:0.86,0.53660105)
+--(axis cs:0.86,1.73414795);
+
+\path [draw=black, draw opacity=0.3, semithick, dash pattern=on 5.55pt off 2.4pt]
+(axis cs:0.46,0.53660105)
+--(axis cs:0.46,1.73414795);
+
+\addplot [color0, mark=diamond*, mark size=3, mark options={solid}]
+table {%
+0.35 0.719516
+0.7 0.62086
+1.2 1.209902
+};
+\addlegendentry{$L_x=3$}
+\addplot [color1, mark=square*, mark size=3, mark options={solid}]
+table {%
+0.32 0.855338
+0.62 0.591035
+1.02 1.041076
+};
+\addlegendentry{$L_x=4$}
+\addplot [color2, mark=asterisk, mark size=3, mark options={solid}]
+table {%
+0.3 1.060831
+0.46 0.751426
+0.68 0.827969
+0.92 1.029858
+1.16 1.263937
+1.4 1.504059
+};
+\addlegendentry{$L_x=8$}
+\addplot [color3, mark=o, mark size=3, mark options={solid,fill opacity=0}]
+table {%
+0.28 1.127345
+0.42 0.821045
+0.6 0.825805
+0.8 0.955179
+1 1.12457
+1.2 1.308944
+1.38 1.497668
+1.48 1.679714
+};
+\addlegendentry{$L_x=10$}
+\addplot [color4, mark=triangle*, mark size=3, mark options={solid,rotate=180}]
+table {%
+0.28 1.17852
+0.38 0.882473
+0.54 0.841244
+0.72 0.920642
+0.88 1.044151
+1.06 1.18671
+1.22 1.338491
+1.38 1.493675
+};
+\addlegendentry{$L_x=12$}
+\addplot [color5, mark=triangle*, mark size=3, mark options={solid}]
+table {%
+0.28 1.251427
+0.34 0.983744
+0.46 0.890784
+0.6 0.906348
+0.74 0.969867
+0.86 1.056317
+1 1.155607
+1.12 1.262781
+1.26 1.374771
+1.36 1.489034
+1.48 1.602535
+};
+\addlegendentry{$L_x=16$}
+\draw (axis cs:0.34,1.5) node[
+  scale=1.2,
+  anchor=base west,
+  text=black,
+  rotate=0.0
+]{\bfseries \textbf\Huge I};
+\draw (axis cs:0.62,1.5) node[
+  scale=1.2,
+  anchor=base west,
+  text=black,
+  rotate=0.0
+]{\bfseries \textbf\Huge II};
+\draw (axis cs:1.108,1.5) node[
+  scale=1.2,
+  anchor=base west,
+  text=black,
+  rotate=0.0
+]{\bfseries \textbf\Huge III};
+\end{axis}
+
+\end{tikzpicture}
