@@ -1,0 +1,21 @@
+#!/bin/bash
+#SBATCH --job-name=test_parallel
+
+#SBATCH --output=mpi_%j.out
+#SBATCH --error=mpi_%j.err
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --tasks-per-node=1
+#SBATCH --time=44:00:00
+
+
+module purge && module load gcc julia/1.6.2
+
+
+
+
+
+
+
+
+ julia ../../run_dmrg_and_compute_obs.jl  64  0.319  

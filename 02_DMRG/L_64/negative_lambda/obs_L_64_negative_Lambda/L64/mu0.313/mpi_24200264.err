@@ -1,0 +1,4 @@
+remove mkl/2017.4 (LD_LIBRARY_PATH) 
+remove impi/2017.4 (PATH, MANPATH, LD_LIBRARY_PATH) 
+Set GNU compilers as MPI wrappers backend 
+load JULIA/1.6.2 (PATH, MANPATH, LD_LIBRARY_PATH, C_INCLUDE_PATH) 
